@@ -1,4 +1,6 @@
-.emergency {
-    color: red;
-    font-weight: bold;
-}
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+

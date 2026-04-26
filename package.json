@@ -1,0 +1,24 @@
+{
+  "name": "hercules-radar",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tailwindcss -i ./static/stylesheet.css -o ./static/output.css --watch",
+    "build": "tailwindcss -i ./static/stylesheet.css -o ./static/output.css"
+},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theibruh/hercules-radar.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/theibruh/hercules-radar/issues"
+  },
+  "homepage": "https://github.com/theibruh/hercules-radar#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
+  }
+}
