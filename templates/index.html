@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hercules Radar</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css')}}"> 
+
+</head>
+<body>
+    <h1>Hercules Radar</h1>
+    <p>Last Updated: <span id="timestamp">{{ timestamp }}</span></p>
+    <button onclick="refreshFlights()">Refresh Flights</button>
+
+    <table border="1" id="flights-table">
+        <tr>
+            <th>Callsign</th>
+            <th>Country</th>
+            <th>Altitude (ft)</th>
+            <th>Speed (km/h)</th>
+            <th>Speed (knots)</th>
+            <th>Squawk</th>
+            <th>Category</th>
+        </tr>
+        {% for flight in flights %}
+        <tr class="{{ 'emergency' if flight[14] in ['7500', '7600', '7700'] else '' }}">
+            <td>{{ flight[1] }}</td>
+            <td>{{ flight[2] }}</td>
+            <td>{{ (flight[7] * 3.28084) | round(2) if flight[7] else "N/A" }}</td>
+            <td>{{ (flight[9] * 3.6) | round(2) if flight[9] else "N/A" }}</td>
+            <td>{{ (flight[9] * 1.94384) | round(2) if flight[9] else "N/A" }}</td>
+            <td>{{ flight[14] if flight[14] else "N/A" }}</td>
+            <td>{{ flight[17] if flight[17] else "N/A" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+
+
+    
+</body>
+</html>
