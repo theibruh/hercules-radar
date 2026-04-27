@@ -9,16 +9,24 @@
 <body class="bg-gray-950 text-white min-h-screen p-8">
 
     <!-- Header -->
-
     <div class="text-center mb-8">
         <img src="{{ url_for('static', filename='SpruceGoose.png') }}" alt="Hercules Radar Logo" class="mx-auto w-24 mb-4">
         <h1 class="text-4xl font-bold tracking-wide">Hercules Radar</h1>
-        <p class="text-gray-400 mt-1">Live flight tracking over Australian airspace</p>
+        <p class="text-gray-400 mt-1">Live flight tracking over global airspace</p>
         <p class="text-gray-500 text-sm mt-2">Last Updated: <span id="timestamp" class="text-green-400">{{ timestamp }}</span></p>
     </div>
 
-    <!-- Refresh Button -->
-    <div class="flex justify-center mb-8">
+    <!-- Controls -->
+    <div class="flex justify-center items-center gap-4 mb-8">
+        <select id="region-select" class="bg-gray-800 text-white border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:border-green-500">
+            <option value="australia">Australia</option>
+            <option value="europe">Europe</option>
+            <option value="north_america">North America</option>
+            <option value="asia">Asia</option>
+            <option value="south_america">South America</option>
+            <option value="africa">Africa</option>
+            <option value="middle_east">Middle East</option>
+        </select>
         <button onclick="refreshFlights()" class="px-6 py-2 bg-green-500 hover:bg-green-400 text-black font-semibold rounded-lg transition-colors duration-200">
             Refresh Flights
         </button>
@@ -28,7 +36,6 @@
     <div id="flights-grid" class="flex flex-col items-center gap-3">
         {% for flight in flights %}
         <div class="w-full max-w-3xl bg-gray-800 rounded-xl px-6 py-4 border border-gray-700 hover:border-green-500 transition-colors duration-200 {% if flight[14] in ['7700', '7600', '7500'] %}border-red-500 bg-red-950{% endif %}">
-            
             <div class="flex items-center justify-between">
                 <span class="text-lg font-bold text-green-400 w-32">✈ {{ flight[1] or "N/A" }}</span>
                 <span class="text-gray-300 w-32">🌍 {{ flight[2] or "N/A" }}</span>

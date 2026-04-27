@@ -1,25 +1,36 @@
 function refreshFlights() {
-    fetch("/flights")
+    const region = document.getElementById("region-select").value;
+
+    fetch(`/flights?region=${region}`)
         .then(response => response.json())
         .then(data => {
             const timestampElement = document.getElementById("timestamp");
             if (timestampElement) {
                 timestampElement.innerText = (data.timestamp || "N/A");
             }
-        
-            const table = document.getElementById("flights-table");
-            while (table.rows.length > 1) {
-                table.deleteRow(1);
-            }
+
+            const grid = document.getElementById("flights-grid");
+            grid.innerHTML = "";
+
             data.flights.forEach(flight => {
-                const row = table.insertRow();
-                row.insertCell(0).innerText = flight[1] || "N/A";
-                row.insertCell(1).innerText = flight[2] || "N/A";
-                row.insertCell(2).innerText = flight[7] ? (flight[7] * 3.28084).toFixed(2) : "N/A";
-                row.insertCell(3).innerText = flight[9] ? (flight[9] * 3.6).toFixed(2) : "N/A";
-                row.insertCell(4).innerText = flight[9] ? (flight[9] * 1.94384).toFixed(2) : "N/A";
-                row.insertCell(5).innerText = flight[14] || "N/A";
-                row.insertCell(6).innerText = flight[17] || "N/A";
+                const isEmergency = ['7700', '7600', '7500'].includes(flight[14]);
+
+                const card = document.createElement("div");
+                card.className = `w-full max-w-3xl bg-gray-800 rounded-xl px-6 py-4 border transition-colors duration-200 ${isEmergency ? "border-red-500 bg-red-950" : "border-gray-700 hover:border-green-500"}`;
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="text-lg font-bold text-green-400 w-32">✈ ${flight[1] || "N/A"}</span>
+                        <span class="text-gray-300 w-32">🌍 ${flight[2] || "N/A"}</span>
+                        <span class="text-gray-300 w-32">↑ ${flight[7] ? (flight[7] * 3.28084).toFixed(2) : "N/A"} ft</span>
+                        <span class="text-gray-300 w-32">➤ ${flight[9] ? (flight[9] * 3.6).toFixed(2) : "N/A"} km/h</span>
+                        <span class="text-gray-300 w-32">⚡ ${flight[9] ? (flight[9] * 1.94384).toFixed(2) : "N/A"} kts</span>
+                        <span class="text-xs text-gray-400 bg-gray-700 px-2 py-1 rounded-full">${flight[14] || "N/A"}</span>
+                        ${isEmergency ? '<span class="text-red-400 text-xs font-bold">⚠ EMERGENCY</span>' : ""}
+                    </div>
+                `;
+
+                grid.appendChild(card);
             });
         })
         .catch(function(error) {
