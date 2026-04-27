@@ -1,44 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Hercules Radar</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='output.css')}}"> 
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='output.css')}}">
 </head>
-<body>
-    <h1>Hercules Radar</h1>
-    <p>Last Updated: <span id="timestamp">{{ timestamp }}</span></p>
-    <button onclick="refreshFlights()">Refresh Flights</button>
+<body class="bg-gray-950 text-white min-h-screen p-8">
 
-    <table border="1" id="flights-table">
-        <tr>
-            <th>Callsign</th>
-            <th>Country</th>
-            <th>Altitude (ft)</th>
-            <th>Speed (km/h)</th>
-            <th>Speed (knots)</th>
-            <th>Squawk</th>
-            <th>Category</th>
-        </tr>
+    <!-- Header -->
+
+    <div class="text-center mb-8">
+        <img src="{{ url_for('static', filename='SpruceGoose.png') }}" alt="Hercules Radar Logo" class="mx-auto w-24 mb-4">
+        <h1 class="text-4xl font-bold tracking-wide">Hercules Radar</h1>
+        <p class="text-gray-400 mt-1">Live flight tracking over Australian airspace</p>
+        <p class="text-gray-500 text-sm mt-2">Last Updated: <span id="timestamp" class="text-green-400">{{ timestamp }}</span></p>
+    </div>
+
+    <!-- Refresh Button -->
+    <div class="flex justify-center mb-8">
+        <button onclick="refreshFlights()" class="px-6 py-2 bg-green-500 hover:bg-green-400 text-black font-semibold rounded-lg transition-colors duration-200">
+            Refresh Flights
+        </button>
+    </div>
+
+    <!-- Flight Cards -->
+    <div id="flights-grid" class="flex flex-col items-center gap-3">
         {% for flight in flights %}
-        <tr class="{{ 'emergency' if flight[14] in ['7500', '7600', '7700'] else '' }}">
-            <td>{{ flight[1] }}</td>
-            <td>{{ flight[2] }}</td>
-            <td>{{ (flight[7] * 3.28084) | round(2) if flight[7] else "N/A" }}</td>
-            <td>{{ (flight[9] * 3.6) | round(2) if flight[9] else "N/A" }}</td>
-            <td>{{ (flight[9] * 1.94384) | round(2) if flight[9] else "N/A" }}</td>
-            <td>{{ flight[14] if flight[14] else "N/A" }}</td>
-            <td>{{ flight[17] if flight[17] else "N/A" }}</td>
-        </tr>
+        <div class="w-full max-w-3xl bg-gray-800 rounded-xl px-6 py-4 border border-gray-700 hover:border-green-500 transition-colors duration-200 {% if flight[14] in ['7700', '7600', '7500'] %}border-red-500 bg-red-950{% endif %}">
+            
+            <div class="flex items-center justify-between">
+                <span class="text-lg font-bold text-green-400 w-32">✈ {{ flight[1] or "N/A" }}</span>
+                <span class="text-gray-300 w-32">🌍 {{ flight[2] or "N/A" }}</span>
+                <span class="text-gray-300 w-32">↑ {{ (flight[7] * 3.28084) | round(2) if flight[7] else "N/A" }} ft</span>
+                <span class="text-gray-300 w-32">➤ {{ (flight[9] * 3.6) | round(2) if flight[9] else "N/A" }} km/h</span>
+                <span class="text-gray-300 w-32">⚡ {{ (flight[9] * 1.94384) | round(2) if flight[9] else "N/A" }} kts</span>
+                <span class="text-xs text-gray-400 bg-gray-700 px-2 py-1 rounded-full">{{ flight[14] or "N/A" }}</span>
+                {% if flight[14] in ['7700', '7600', '7500'] %}
+                <span class="text-red-400 text-xs font-bold">⚠ EMERGENCY</span>
+                {% endif %}
+            </div>
+        </div>
         {% endfor %}
-    </table>
+    </div>
 
-
-<script src="{{ url_for('static', filename='app.js') }}"></script>
-
-
-    
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
