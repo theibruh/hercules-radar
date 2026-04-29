@@ -1,5 +1,25 @@
+let selectedRegion = "australia";
+
+function toggleDropdown() {
+    const menu = document.getElementById("dropdown-menu");
+    menu.classList.toggle("hidden");
+}
+
+function selectRegion(value, label) {
+    selectedRegion = value;
+    document.getElementById("dropdown-label").innerText = label;
+    document.getElementById("dropdown-menu").classList.add("hidden");
+}
+
+document.addEventListener("click", function(event) {
+    const container = document.getElementById("dropdown-container");
+    if (!container.contains(event.target)) {
+        document.getElementById("dropdown-menu").classList.add("hidden");
+    }
+});
+
 function refreshFlights() {
-    const region = document.getElementById("region-select").value;
+    const region = selectedRegion;
 
     fetch(`/flights?region=${region}`)
         .then(response => response.json())
