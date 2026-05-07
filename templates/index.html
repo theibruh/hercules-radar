@@ -29,6 +29,15 @@
 
     <!-- Controls -->
     <div class="flex justify-center items-center gap-4 mb-8">
+      <input
+        id="search-input"
+        type="text"
+        placeholder="Search callsign..."
+        oninput="searchFlights()"
+        class="bg-gray-800 text-white border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:border-green-500 transition-colors duration-200"
+      />
+
+      
       <!-- Custom Dropdown -->
       <div class="relative" id="dropdown-container">
         <!-- Dropdown Button -->
@@ -104,8 +113,7 @@
       >
         <div class="flex items-center justify-between">
           <span class="text-lg font-bold text-green-400 w-32"
-            >✈ {{ flight[1] or "N/A" }}</span
-          >
+            >✈ {{ flight[1].strip() or "N/A" if flight[1] else "N/A" }}</span>
           <span class="text-gray-300 w-32">🌍 {{ flight[2] or "N/A" }}</span>
           <span class="text-gray-300 w-32"
             >↑ {{ (flight[7] * 3.28084) | round(2) if flight[7] else "N/A" }}
