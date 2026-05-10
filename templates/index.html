@@ -8,6 +8,11 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='output.css')}}"
     />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   </head>
   <body class="bg-gray-950 text-white min-h-screen p-8">
     <!-- Header -->
@@ -37,7 +42,6 @@
         class="bg-gray-800 text-white border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:border-green-500 transition-colors duration-200"
       />
 
-      
       <!-- Custom Dropdown -->
       <div class="relative" id="dropdown-container">
         <!-- Dropdown Button -->
@@ -109,11 +113,15 @@
     <div id="flights-grid" class="flex flex-col items-center gap-3">
       {% for flight in flights %}
       <div
-        class="w-full max-w-3xl bg-gray-800 rounded-xl px-6 py-4 border border-gray-700 hover:border-green-500 transition-colors duration-200 {% if flight[14] in ['7700', '7600', '7500'] %}border-red-500 bg-red-950{% endif %}"
+        class="w-full max-w-3xl bg-gray-800 rounded-xl border transition-colors duration-200 {% if flight[14] in ['7700', '7600', '7500'] %}border-red-500 bg-red-950{% endif %} border-gray-700 hover:border-green-500 group"
+        onmouseenter="showDetails(this, {{ flight[5] }}, {{ flight[6] }}, '{{ flight[1] }}')"
+        onmouseleave="hideDetails(this)"
       >
-        <div class="flex items-center justify-between">
+        <!-- Main Card Row -->
+        <div class="flex items-center justify-between px-6 py-4">
           <span class="text-lg font-bold text-green-400 w-32"
-            >✈ {{ flight[1].strip() or "N/A" if flight[1] else "N/A" }}</span>
+            >✈ {{ flight[1].strip() or "N/A" if flight[1] else "N/A" }}</span
+          >
           <span class="text-gray-300 w-32">🌍 {{ flight[2] or "N/A" }}</span>
           <span class="text-gray-300 w-32"
             >↑ {{ (flight[7] * 3.28084) | round(2) if flight[7] else "N/A" }}
@@ -133,6 +141,25 @@
           {% if flight[14] in ['7700', '7600', '7500'] %}
           <span class="text-red-400 text-xs font-bold">⚠ EMERGENCY</span>
           {% endif %}
+        </div>
+
+        <!-- Details Panel — hidden by default -->
+        <div class="details-panel hidden border-t border-gray-700 px-6 py-4">
+          <div class="flex gap-4">
+            <!-- Map -->
+            <div
+              class="map-container rounded-lg overflow-hidden"
+              style="width: 200px; height: 150px"
+            ></div>
+            <!-- Extra Info -->
+            <div class="flex flex-col gap-2 text-sm text-gray-300">
+              <p>📍 Lat: {{ flight[6] or "N/A" }}</p>
+              <p>📍 Lon: {{ flight[5] or "N/A" }}</p>
+              <p>🧭 Heading: {{ flight[10] or "N/A" }}°</p>
+              <p>🛬 On Ground: {{ "Yes" if flight[8] else "No" }}</p>
+              <p>✈ Category: {{ flight[17] or "N/A" }}</p>
+            </div>
+          </div>
         </div>
       </div>
       {% endfor %}
