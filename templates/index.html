@@ -114,7 +114,7 @@
       {% for flight in flights %}
       <div
         class="w-full max-w-3xl bg-gray-800 rounded-xl border transition-colors duration-200 {% if flight[14] in ['7700', '7600', '7500'] %}border-red-500 bg-red-950{% endif %} border-gray-700 hover:border-green-500 group"
-        onmouseenter="showDetails(this, {{ flight[5] }}, {{ flight[6] }}, '{{ flight[1] }}')"
+        onmouseenter="showDetails(this, {{ flight[5] }}, {{ flight[6] }}, '{{ flight[1] }}', {{ flight[10] or 0 }}, {{ (flight[9] * 1.94384) if flight[9] else 0 }})"
         onmouseleave="hideDetails(this)"
       >
         <!-- Main Card Row -->

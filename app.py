@@ -17,21 +17,50 @@ REGIONS = {
 @app.route("/")
 def index():
     region = REGIONS["australia"]
-    response = requests.get(f"https://opensky-network.org/api/states/all?lamin={region['lamin']}&lomin={region['lomin']}&lamax={region['lamax']}&lomax={region['lomax']}&extended=1")
-    data = response.json()
-    aircraft_list = data["states"]
-    timestamp = datetime.fromtimestamp(data["time"]).strftime("%H:%M:%S")
+    try:
+        response = requests.get(f"https://opensky-network.org/api/states/all?lamin={region['lamin']}&lomin={region['lomin']}&lamax={region['lamax']}&lomax={region['lomax']}&extended=1")
+        data = response.json()
+        aircraft_list = data["states"]
+        timestamp = datetime.fromtimestamp(data["time"]).strftime("%H:%M:%S")
+    except Exception as e:
+        print(f"[INDEX ROUTE] Failed to fetch OpenSky data - bruhh likely rate limited or API down: {e}")
+        aircraft_list = []
+        timestamp = "N/A 'Api Error'"
     return render_template("index.html", flights=aircraft_list, timestamp=timestamp)
 
 @app.route("/flights")
 def get_flights():
     region_name = request.args.get("region", "australia")
     region = REGIONS.get(region_name, REGIONS["australia"])
-    response = requests.get(f"https://opensky-network.org/api/states/all?lamin={region['lamin']}&lomin={region['lomin']}&lamax={region['lamax']}&lomax={region['lomax']}&extended=1")
-    data = response.json()
-    aircraft_list = data["states"]
-    timestamp = datetime.fromtimestamp(data["time"]).strftime("%H:%M:%S")
+    try:
+        response = requests.get(f"https://opensky-network.org/api/states/all?lamin={region['lamin']}&lomin={region['lomin']}&lamax={region['lamax']}&lomax={region['lomax']}&extended=1")
+        data = response.json()
+        aircraft_list = data["states"]
+        timestamp = datetime.fromtimestamp(data["time"]).strftime("%H:%M:%S")
+    except Exception as e:
+        print(f"[FLIGHTS ROUTE] Failed to fetch OpenSky data - ':(' likely rate limited or API down: {e}")
+        aircraft_list = []
+        timestamp = "N/A 'Api Error'"
     return {"flights": aircraft_list, "timestamp": timestamp}
+
+@app.route("/aircraft")
+def get_aircraft():
+    callsign = request.args.get("callsign", "").strip().upper()
+    try:
+        response = requests.get(f"https://opensky-network.org/api/states/all?extended=1")
+        data = response.json()
+        for flight in data["states"]:
+            if flight[1] and flight[1].strip().upper() == callsign:
+                return {
+                    "lat": flight[6],
+                    "lon": flight[5],
+                    "heading": flight[10],
+                    "speed": flight[9]
+                }
+    except Exception as e:
+        print(f"[AIRCRAFT ROUTE] Failed to fetch OpenSky data - ':(' likely rate limited or API down: {e}")
+    return {"lat": None, "lon": None}
+
 
 if __name__ == "__main__":
     app.run(debug=True)
