@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Flight } from "@/types/flight";
-import { regions } from "@/types/regions";
+import { Region } from "@/types/regions";
 
-const REGIONS: Record<string, regions> = {
+const REGIONS: Record<string, Region> = {
   australia:     { lamin: -44, lomin: 113,  lamax: -10, lomax: 154 },
   europe:        { lamin: 36,  lomin: -10,  lamax: 71,  lomax: 40  },
   north_america: { lamin: 15,  lomin: -170, lamax: 72,  lomax: -50 },
@@ -29,7 +29,8 @@ function mapToFlight(raw: unknown[]): Flight {
 }
 
 export async function GET(request: NextRequest) {
-  const regionName = request.nextUrl.searchParams.get("region") ?? "australia";
+  const searchParams = request.nextUrl.searchParams;
+  const regionName = searchParams.get("region") ?? "australia";
   const region = REGIONS[regionName] ?? REGIONS["australia"];
 
   try {

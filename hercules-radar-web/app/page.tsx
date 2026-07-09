@@ -1,40 +1,39 @@
 import FlightCard from "@/components/FlightCard";
 import { Flight } from "@/types/flight";
 
-const testFlight: Flight = {
-  icao24: "7c6b2d",
-  callsign: "QFA441",
-  country: "Australia",
-  longitude: 151.2093,
-  latitude: -33.8688,
-  altitude: 11277,
-  onGround: false,
-  speed: 242.78,
-  heading: 43,
-  squawk: "1234",
-  category: 3,
-};
+async function getFlights(region: string): Promise<{ flights: Flight[]; timestamp: string }> {
+  const res = await fetch(`http://localhost:3000/api/flights?region=${region}`, {
+    cache: "no-store",
+  });
 
-const emergencyFlight: Flight = {
-  icao24: "7c1234",
-  callsign: "VOZ888",
-  country: "Australia",
-  longitude: 153.0251,
-  latitude: -27.4698,
-  altitude: 3657,
-  onGround: false,
-  speed: 144.0,
-  heading: 90,
-  squawk: "7700",
-  category: 3,
-};
+  if (!res.ok) {
+    return { flights: [], timestamp: "N/A" };
+  }
 
-export default function Home() {
+  return res.json();
+}
+
+export default async function Home() {
+  const { flights, timestamp } = await getFlights("australia");
+
   return (
     <main className="min-h-screen bg-[#0a0f1a] p-8">
       <div className="max-w-5xl mx-auto flex flex-col gap-3">
-        <FlightCard flightData={testFlight} />
-        <FlightCard flightData={emergencyFlight} />
+
+        <div className="text-center mb-6">
+          <h1 className="text-3xl font-bold text-white tracking-wide">Hercules Radar</h1>
+          <p className="text-white/40 text-sm mt-1">Live flight tracking over global airspace</p>
+          <p className="text-white/25 text-xs mt-1">Last updated: <span className="text-green-400/70">{timestamp}</span></p>
+        </div>
+
+        {flights.length === 0 ? (
+          <p className="text-center text-white/30 text-sm">No flights found or API unavailable.</p>
+        ) : (
+          flights.map((flight) => (
+            <FlightCard key={flight.icao24} flightData={flight} />
+          ))
+        )}
+
       </div>
     </main>
   );
