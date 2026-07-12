@@ -30,11 +30,11 @@ export default function SplashScreen() {
 
     const fadeTimer = setTimeout(() => {
       setIsFading(true);
-    }, 5500);
+    }, 7500);
 
     const removeTimer = setTimeout(() => {
       setIsVisible(false);
-    }, 6000);
+    }, 8000);
 
     return () => {
       clearTimeout(fadeTimer);
@@ -55,14 +55,14 @@ export default function SplashScreen() {
       {/* Goose reveal animation */}
       <div className="relative w-[150px] h-[150px] mb-8">
         <img
-          src="/SpruceGoose.png"
+          src="/SpruceGoose-transparent.png"
           alt="Hercules Radar"
           className="absolute inset-0 w-full h-full object-contain opacity-[0.15]"
         />
         <img
-          src="/SpruceGoose.png"
+          src="/SpruceGoose-transparent.png"
           alt=""
-          className="absolute inset-0 w-full h-full object-contain animate-[fillReveal_4s_ease-in-out_0.3s_forwards]"
+          className="absolute inset-0 w-full h-full object-contain animate-[fillReveal_6.3s_ease-in-out_0.4s_forwards]"
           style={{ clipPath: "inset(100% 0 0 0)" }}
         />
       </div>
@@ -80,9 +80,7 @@ export default function SplashScreen() {
         <p className="text-orange-500/60 text-[10px] uppercase tracking-[0.12em] mb-2.5">
           Did you know?
         </p>
-        <p className="text-white/60 text-[13px] leading-relaxed">
-          {fact}
-        </p>
+        <p className="text-white/60 text-[13px] leading-relaxed">{fact}</p>
       </div>
 
       {/* Loading dots */}
