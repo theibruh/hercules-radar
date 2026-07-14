@@ -20,6 +20,7 @@ export default function Navbar() {
               src="/SpruceGoose-transparent.png"
               alt="Hercules Radar"
               fill
+              sizes="44px"
               className="object-contain"
             />
           </div>

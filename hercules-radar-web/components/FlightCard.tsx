@@ -2,6 +2,17 @@
 
 import { useState } from "react";
 import { Flight } from "@/types/flight";
+import dynamic from "next/dynamic";
+import AircraftPhoto from "@/components/AircraftPhoto";
+
+const FlightMap = dynamic(() => import("@/components/FlightMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-55 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-white/20 text-[11px] animate-pulse">
+      Loading map...
+    </div>
+  ),
+});
 
 type FlightCardProps = {
   flightData: Flight;
@@ -9,6 +20,7 @@ type FlightCardProps = {
 
 export default function FlightCard({ flightData }: FlightCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [registration, setRegistration] = useState<string | null>(null);
 
   const isEmergency = ["7700", "7600", "7500"].includes(
     flightData.squawk ?? "",
@@ -117,14 +129,15 @@ export default function FlightCard({ flightData }: FlightCardProps) {
         >
           {/* LEFT third: Photo + registration */}
           <div className="flex-1 flex flex-col gap-2">
-            <div className="w-full h-[120px] rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-white/20 text-[11px]">
-              Aircraft photo
-            </div>
+            <AircraftPhoto
+              icao24={flightData.icao24}
+              onRegistration={setRegistration}
+            />
             <div>
               <p className="text-[10px] uppercase tracking-widest text-white/35 mb-0.5">
                 Registration
               </p>
-              <p className="text-[13px] text-white/85">—</p>
+              <p className="text-[13px] text-white/85">{registration ?? "—"}</p>
             </div>
             <p className="text-[9px] text-white/20">
               Photo via{" "}
@@ -144,9 +157,19 @@ export default function FlightCard({ flightData }: FlightCardProps) {
 
           {/* MIDDLE third: Map + data */}
           <div className="flex-1 flex flex-col gap-3">
-            <div className="w-full h-[100px] rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-white/20 text-[11px]">
-              Leaflet map
-            </div>
+            {flightData.latitude && flightData.longitude ? (
+              <FlightMap
+                latitude={flightData.latitude}
+                longitude={flightData.longitude}
+                heading={flightData.heading ?? 0}
+                speed={flightData.speed}
+                onGround={flightData.onGround}
+              />
+            ) : (
+              <div className="w-full h-55 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-white/20 text-[11px]">
+                No position data
+              </div>
+            )}
             <div className="grid grid-cols-2 gap-x-3 gap-y-2 text-[11px]">
               <div>
                 <p className="text-[10px] uppercase tracking-widest text-white/35 mb-0.5">
