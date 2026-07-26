@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Flight } from "@/types/flight";
 import dynamic from "next/dynamic";
 import AircraftPhoto from "@/components/AircraftPhoto";
+import { getCategoryLabel } from "@/lib/aircraftCategory";
 
 const FlightMap = dynamic(() => import("@/components/FlightMap"), {
   ssr: false,
@@ -35,7 +36,6 @@ export default function FlightCard({ flightData }: FlightCardProps) {
     : null;
 
   const callsign = flightData.callsign?.trim() || "N/A";
-
   return (
     <div
       onClick={() => setIsExpanded(!isExpanded)}
@@ -195,7 +195,7 @@ export default function FlightCard({ flightData }: FlightCardProps) {
                 <p className="text-[10px] uppercase tracking-widest text-white/35 mb-0.5">
                   Category
                 </p>
-                <p className="text-white/85">{flightData.category ?? "N/A"}</p>
+                <p className="text-white/85">{getCategoryLabel(flightData.category)?? "N/A"}</p>
               </div>
             </div>
           </div>

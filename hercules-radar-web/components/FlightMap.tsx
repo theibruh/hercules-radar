@@ -24,8 +24,9 @@ function predictPosition(
   const distance = speedMs * elapsedSeconds;
   const headingRad = (headingDeg * Math.PI) / 180;
   const latRad = (lat * Math.PI) / 180;
-
   const dLat = ((distance * Math.cos(headingRad)) / EARTH_RADIUS_M) * (180 / Math.PI);
+
+  //  the same physical east-west distance (in meters) corresponds to a larger change in longitude degrees near the poles than it does near the equator, so we divide by cos(lat) to account for that.
   const dLon =
     ((distance * Math.sin(headingRad)) / (EARTH_RADIUS_M * Math.cos(latRad))) *
     (180 / Math.PI);
@@ -67,13 +68,14 @@ export default function FlightMap({
   // Create the map + marker once per mount — untouched by later position refreshes,
   // so the user's pan/zoom state and tile cache survive each 30s data refresh.
   useEffect(() => {
+    // Protect against Strict Mode double-invocation and effect running before the ref is attached.
     if (!mapContainerRef.current || mapInstanceRef.current) return;
 
     const map = L.map(mapContainerRef.current, {
       zoomControl: true,
       dragging: true,
       scrollWheelZoom: true,
-      attributionControl: false,
+      attributionControl: true,
     }).setView([latitude, longitude], 6);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -119,6 +121,7 @@ export default function FlightMap({
       marker.setLatLng([lat, lon]);
       frameId = requestAnimationFrame(animate);
     };
+    //Kick off the animation loop
     frameId = requestAnimationFrame(animate);
 
     return () => cancelAnimationFrame(frameId);
