@@ -1,19 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import RegionSelector from "@/components/RegionSelector";
 import Link from "next/link";
 
-
 export default function Navbar() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const selectedRegion = searchParams.get("region") ?? "australia";
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-40 bg-[#292e37]/95 backdrop-blur-md border-b border-white/[0.08]">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
-
         <div className="flex items-center gap-3">
           <div className="relative w-11 h-11">
             <Image
@@ -25,13 +24,16 @@ export default function Navbar() {
             />
           </div>
           <span className="text-white font-bold text-lg tracking-wide">
-            HERCULES RADAR 
+            HERCULES RADAR
           </span>
         </div>
 
         <div className="flex items-center gap-5">
           {/* hardcoded links for now, as the logbook and about pages are not yet implemented */}
-          <Link href="/" className="text-orange-500 text-[13px] transition-colors">
+          <Link
+            href="/"
+            className="text-orange-500 text-[13px] transition-colors"
+          >
             Home
           </Link>
           <span className="text-white/20 text-[13px] cursor-default">
@@ -46,11 +48,19 @@ export default function Navbar() {
             <input
               type="text"
               placeholder="Search callsign..."
-              disabled
-              className="bg-transparent border-none outline-none text-white/70 text-[12px] w-full placeholder:text-white/25 cursor-not-allowed"
+              defaultValue={searchParams.get("search") ?? ""}
+              onChange={(e) => {
+                const params = new URLSearchParams(searchParams.toString());
+                if (e.target.value) {
+                  params.set("search", e.target.value);
+                } else {
+                  params.delete("search");
+                }
+                router.push(`/?${params.toString()}`);
+              }}
+              className="bg-transparent border-none outline-none text-white/70 text-[12px] w-full placeholder:text-white/25"
             />
           </div>
-
           <RegionSelector selectedRegion={selectedRegion} compact />
         </div>
 
@@ -68,7 +78,6 @@ export default function Navbar() {
             Sign in
           </button>
         </div>
-
       </div>
     </nav>
   );

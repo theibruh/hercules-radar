@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import FlightCard from "@/components/FlightCard";
 import { Flight } from "@/types/flight";
 
@@ -19,6 +20,8 @@ export default function FlightList({
 }: FlightListProps) {
   const [flights, setFlights] = useState(initialFlights);
   const [timestamp, setTimestamp] = useState(initialTimestamp);
+  const searchParams = useSearchParams();
+  const searchQuery = (searchParams.get("search") ?? "").toLowerCase();
 
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -39,6 +42,12 @@ export default function FlightList({
     return () => clearInterval(interval);
   }, [region]);
 
+  const visibleFlights = searchQuery
+    ? flights.filter((flight) =>
+        (flight.callsign ?? "").toLowerCase().includes(searchQuery)
+      )
+    : flights;
+
   return (
     <>
       <div className="flex items-center justify-between text-[11px] text-white/40 uppercase tracking-widest border-b border-white/[0.06] pb-3 mb-2">
@@ -46,17 +55,17 @@ export default function FlightList({
           Region: <span className="text-white/70 font-bold">{region.replace("_", " ")}</span>
         </span>
         <span>
-          {flights.length} flights tracked
+          {visibleFlights.length} flights tracked
         </span>
         <span>
           Last updated: <span className="text-green-400/70">{timestamp}</span>
         </span>
       </div>
 
-      {flights.length === 0 ? (
+      {visibleFlights.length === 0 ? (
         <p className="text-center text-red-400/30 text-sm">No flights found or API unavailable.</p>
       ) : (
-        flights.map((flight) => (
+        visibleFlights.map((flight) => (
           <FlightCard key={flight.icao24} flightData={flight} />
         ))
       )}
