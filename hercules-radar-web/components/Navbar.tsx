@@ -13,7 +13,7 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-40 bg-[#292e37]/95 backdrop-blur-md border-b border-white/[0.08]">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
-        <div className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-3">
           <div className="relative w-11 h-11">
             <Image
               src="/SpruceGoose-transparent.png"
@@ -26,7 +26,7 @@ export default function Navbar() {
           <span className="text-white font-bold text-lg tracking-wide">
             HERCULES RADAR
           </span>
-        </div>
+        </Link>
 
         <div className="flex items-center gap-5">
           {/* hardcoded links for now, as the logbook and about pages are not yet implemented */}
