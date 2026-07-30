@@ -44,7 +44,7 @@ export default function FlightList({
 
   const visibleFlights = searchQuery
     ? flights.filter((flight) =>
-        (flight.callsign ?? "").toLowerCase().includes(searchQuery)
+        (flight.callsign ?? "").toLowerCase().includes(searchQuery),
       )
     : flights;
 
@@ -52,18 +52,23 @@ export default function FlightList({
     <>
       <div className="flex items-center justify-between text-[11px] text-white/40 uppercase tracking-widest border-b border-white/[0.06] pb-3 mb-2">
         <span>
-          Region: <span className="text-white/70 font-bold">{region.replace("_", " ")}</span>
+          Region:{" "}
+          <span className="text-white/70 font-bold">
+            {region.replace("_", " ")}
+          </span>
         </span>
-        <span>
-          {visibleFlights.length} flights tracked
-        </span>
+        <span>{visibleFlights.length} flights tracked</span>
         <span>
           Last updated: <span className="text-green-400/70">{timestamp}</span>
         </span>
       </div>
 
       {visibleFlights.length === 0 ? (
-        <p className="text-center text-red-400/30 text-sm">No flights found or API unavailable.</p>
+        <p className="text-center text-red-400/30 text-sm">
+          {searchQuery
+            ? `No flights matching "${searchQuery}" in this region.`
+            : "No flights found or API unavailable."}
+        </p>
       ) : (
         visibleFlights.map((flight) => (
           <FlightCard key={flight.icao24} flightData={flight} />
