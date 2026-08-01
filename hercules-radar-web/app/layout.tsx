@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SplashScreen from "@/components/SplashScreen";
 import Navbar from "@/components/Navbar";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { Suspense } from "react";
 
 const geistSans = Geist({
@@ -32,14 +33,15 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#0a0f1a]">
-        <SplashScreen />
-        <Suspense fallback={<div className="h-20" />}>
-          <Navbar />
-        </Suspense>
-        {/* Add padding to the top of the page to account for the fixed navbar */}
-        <div className="pt-20">
-          {children}
-        </div>
+        <ThemeProvider>
+          <SplashScreen />
+          <Suspense fallback={<div className="h-20" />}>
+            <Navbar />
+          </Suspense>
+          <div className="pt-20">
+            {children}
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );
