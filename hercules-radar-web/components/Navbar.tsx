@@ -1,5 +1,6 @@
 "use client";
 
+import { useTheme } from "@/components/ThemeProvider";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import RegionSelector from "@/components/RegionSelector";
@@ -9,6 +10,7 @@ export default function Navbar() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedRegion = searchParams.get("region") ?? "australia";
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-40 bg-[#292e37]/95 backdrop-blur-md border-b border-white/[0.08]">
@@ -65,12 +67,47 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div
-            className="w-8 h-8 rounded-md border border-white/15 bg-white/[0.04] flex items-center justify-center text-white/30 opacity-50 cursor-not-allowed"
-            title="Light/dark mode — coming soon"
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle light/dark mode"
+            className="w-11 h-11 rounded-lg flex items-center justify-center cursor-pointer"
           >
-            <span className="text-[14px]">◐</span>
-          </div>
+            <svg width="28" height="33" viewBox="0 0 22 26">
+              <defs>
+                <clipPath id="shutter-clip">
+                  <rect x="4" y="4" width="14" height="18" rx="4" />
+                </clipPath>
+              </defs>
+
+              {/* Frame — outer rounded rect, dark fill, orange-700 outline */}
+              <rect
+                x="1.75"
+                y="1.75"
+                width="18.5"
+                height="22.5"
+                rx="5.5"
+                fill="#1f2430"
+                stroke="#c2410c"
+                strokeWidth="2.5"
+              />
+
+              {/* Shade — smaller inset rect, clipped, animates open/closed */}
+              <g clipPath="url(#shutter-clip)">
+                <rect
+                  x="4"
+                  y="4"
+                  width="14"
+                  height="18"
+                  fill="#f97316"
+                  style={{
+                    transform: theme === "light" ? "scaleY(0.06)" : "scaleY(1)",
+                    transformOrigin: "11px 4px",
+                    transition: "transform 0.45s ease",
+                  }}
+                />
+              </g>
+            </svg>
+          </button>
           <button
             disabled
             className="bg-orange-500/[0.12] border border-orange-500/40 text-orange-500 text-[12px] px-4 py-2 rounded-lg cursor-not-allowed opacity-70"
