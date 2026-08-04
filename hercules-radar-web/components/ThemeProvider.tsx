@@ -12,15 +12,19 @@ type ThemeContextType = {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(() => {
+  const [theme, setTheme] = useState<Theme>("dark");
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- deferring this read is required to avoid a hydration mismatch, since localStorage doesn't exist during SSR
     try {
       const stored = localStorage.getItem("theme") as Theme | null;
-      if (stored === "light" || stored === "dark") return stored;
+      if (stored === "light" || stored === "dark") {
+        setTheme(stored);
+      }
     } catch {
       // ignore; fall back to default
     }
-    return "dark";
-  });
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;
