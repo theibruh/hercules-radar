@@ -53,58 +53,51 @@ export default function RegionSelector({
   return (
     <div
       ref={dropdownRef}
-      className={`relative ${compact ? "w-[150px]" : "w-[220px] flex flex-col gap-1.5"}`}
+      className={`relative ${compact ? "w-[110px]" : "w-[180px]"}`}
     >
-      {!compact && (
-        <p className="text-[10px] uppercase tracking-widest text-white/35">
-          Region
-        </p>
-      )}
-
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`
-          w-full flex items-center justify-between
-          bg-white/[0.06] border border-white/10 rounded-lg
-          text-white/85 cursor-pointer
-          hover:border-orange-500/50 transition-colors duration-200
-          ${compact ? "px-3 py-2 text-[12px]" : "px-3.5 py-2.5 text-[13px]"}
+          font-heading w-full flex flex-col items-start gap-0.5
+          border-b cursor-pointer transition-colors duration-200
+          ${isOpen ? "border-orange-500" : "border-white/20 hover:border-white/40"}
+          ${compact ? "pb-1" : "pb-1.5"}
         `}
       >
-        <span className="flex items-center gap-2">
-          <span className={`text-orange-500 ${compact ? "text-[9px]" : "text-[10px]"}`}>●</span>
-          {selected.label}
+        <span className={`text-white/30 tracking-[0.2em] uppercase ${compact ? "text-[8px]" : "text-[9px]"}`}>
+          Region
         </span>
-        <span
-          className={`text-white/30 transition-transform duration-200 ${compact ? "text-[9px]" : "text-[10px]"} ${isOpen ? "rotate-180" : ""}`}
-        >
-          ▼
+        <span className="flex items-center justify-between w-full">
+          <span className={`text-white font-semibold tracking-wide ${compact ? "text-[13px]" : "text-[15px]"}`}>
+            {selected.label}
+          </span>
+          <span
+            className={`text-orange-500 transition-transform duration-200 ${compact ? "text-[10px]" : "text-[11px]"}`}
+            style={{ transform: isOpen ? "rotate(90deg)" : "rotate(0deg)" }}
+          >
+             ▸
+          </span>
         </span>
       </button>
 
       {isOpen && (
-        <div className="absolute top-[calc(100%+6px)] left-0 right-0 bg-[#11161f] border border-white/10 rounded-lg overflow-hidden shadow-[0_8px_24px_rgba(0,0,0,0.4)] z-10">
+        <div className="font-heading absolute top-[calc(100%+8px)] left-0 right-0 bg-[#1f2430] border border-white/10 rounded-sm overflow-hidden shadow-[0_8px_24px_rgba(0,0,0,0.4)] z-10">
           {REGIONS.map((region) => (
             <div
               key={region.value}
               onClick={() => handleSelect(region.value)}
               className={`
                 cursor-pointer flex items-center justify-between
-                transition-colors duration-150
+                border-l-2 transition-colors duration-150
                 ${compact ? "px-3 py-2 text-[12px]" : "px-3.5 py-2.5 text-[13px]"}
                 ${
                   region.value === selectedRegion
-                    ? "bg-orange-500/[0.12] text-orange-500 font-bold"
-                    : "text-white/70 hover:bg-orange-500/[0.08] hover:text-white/95"
+                    ? "border-orange-500 bg-orange-500/[0.08] text-orange-500 font-semibold"
+                    : "border-transparent text-white/70 hover:bg-white/[0.04] hover:text-white/95"
                 }
               `}
             >
               {region.label}
-              {region.value === selectedRegion && (
-                <span className={`text-orange-500 ${compact ? "text-[11px]" : "text-[12px]"}`}>
-                  ✓
-                </span>
-              )}
             </div>
           ))}
         </div>
