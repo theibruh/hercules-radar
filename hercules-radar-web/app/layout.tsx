@@ -1,6 +1,6 @@
 import "leaflet/dist/leaflet.css";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Rajdhani } from "next/font/google";
 import "./globals.css";
 import SplashScreen from "@/components/SplashScreen";
 import Navbar from "@/components/Navbar";
@@ -17,9 +17,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const rajdhani = Rajdhani({
+  variable: "--font-rajdhani",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "Hercules Radar: Live Flight Tracking",
-  description: "Live flight tracking over global airspace. The way of the future.",
+  description:
+    "Live flight tracking over global airspace. The way of the future.",
 };
 
 export default function RootLayout({
@@ -30,7 +37,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${rajdhani.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#0a0f1a]">
         <ThemeProvider>
@@ -38,9 +45,7 @@ export default function RootLayout({
           <Suspense fallback={<div className="h-20" />}>
             <Navbar />
           </Suspense>
-          <div className="pt-20">
-            {children}
-          </div>
+          <div className="pt-20">{children}</div>
         </ThemeProvider>
       </body>
     </html>

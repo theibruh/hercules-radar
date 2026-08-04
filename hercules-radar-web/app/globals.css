@@ -44,6 +44,7 @@
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-rajdhani);
 
   --color-surface-page: var(--color-surface-page);
   --color-surface-nav: var(--color-surface-nav);
