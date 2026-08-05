@@ -13,7 +13,7 @@ export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-40 bg-[#292e37]/95 backdrop-blur-md border-b border-white/[0.08]">
+    <nav className="fixed top-0 left-0 right-0 z-40 bg-surface-nav/95 backdrop-blur-md border-b border-border-subtle">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
         <div className="flex items-center gap-10">
           <Link href="/" className="flex items-center gap-3">
@@ -26,7 +26,7 @@ export default function Navbar() {
                 className="object-contain"
               />
             </div>
-            <span className="text-white font-heading font-bold text-xl tracking-widest">
+            <span className="text-text-primary font-heading font-bold text-xl tracking-widest">
               HERCULES RADAR
             </span>
           </Link>
@@ -34,14 +34,14 @@ export default function Navbar() {
           <div className="flex items-center gap-6">
             <Link
               href="/"
-              className="font-heading text-orange-500 text-[12px] font-semibold tracking-[0.2em] uppercase"
+              className="font-heading text-accent text-[12px] font-semibold tracking-[0.2em] uppercase"
             >
               Home
             </Link>
-            <span className="font-heading text-white/35 text-[12px] font-semibold tracking-[0.2em] uppercase cursor-default transition-colors duration-200 hover:text-white/65">
+            <span className="font-heading text-text-muted text-[12px] font-semibold tracking-[0.2em] uppercase cursor-default transition-colors duration-200 hover:text-text-hover">
               Logbook
             </span>
-            <span className="font-heading text-white/35 text-[12px] font-semibold tracking-[0.2em] uppercase cursor-default transition-colors duration-200 hover:text-white/65">
+            <span className="font-heading text-text-muted text-[12px] font-semibold tracking-[0.2em] uppercase cursor-default transition-colors duration-200 hover:text-text-hover">
               About
             </span>
           </div>
@@ -50,13 +50,13 @@ export default function Navbar() {
         <div className="flex items-center gap-5">
           <div className="flex flex-col gap-1 w-[150px]">
             <div className="flex gap-[3px] mb-[3px]">
-              <span className="w-px h-[3px] bg-white/15" />
-              <span className="w-px h-[5px] bg-white/20" />
-              <span className="w-px h-[3px] bg-white/15" />
-              <span className="w-px h-[5px] bg-white/20" />
-              <span className="w-px h-[3px] bg-white/15" />
-              <span className="w-px h-[5px] bg-white/20" />
-              <span className="w-px h-[3px] bg-white/15" />
+              <span className="w-px h-[3px] bg-border-interactive" />
+              <span className="w-px h-[5px] bg-text-faint" />
+              <span className="w-px h-[3px] bg-border-interactive" />
+              <span className="w-px h-[5px] bg-text-faint" />
+              <span className="w-px h-[3px] bg-border-interactive" />
+              <span className="w-px h-[5px] bg-text-faint" />
+              <span className="w-px h-[3px] bg-border-interactive" />
             </div>
             <input
               type="text"
@@ -71,7 +71,7 @@ export default function Navbar() {
                 }
                 router.push(`/?${params.toString()}`);
               }}
-              className="font-heading bg-transparent border-0 border-b border-white/20 outline-none text-white text-[12px] font-medium tracking-wide w-full placeholder:text-white/30 pb-1 focus:border-orange-500 transition-colors duration-200"
+              className="font-heading bg-transparent border-0 border-b border-border-interactive outline-none text-text-primary text-[12px] font-medium tracking-wide w-full placeholder:text-text-muted pb-1 focus:border-accent transition-colors duration-200"
             />
           </div>
 
@@ -95,8 +95,8 @@ export default function Navbar() {
                   width="18.5"
                   height="22.5"
                   rx="5.5"
-                  fill="#1f2430"
-                  stroke="#c2410c"
+                  fill="var(--color-surface-panel)"
+                  stroke="var(--color-accent-frame)"
                   strokeWidth="2.5"
                 />
                 <g clipPath="url(#shutter-clip)">
@@ -105,7 +105,7 @@ export default function Navbar() {
                     y="4"
                     width="14"
                     height="18"
-                    fill="#f97316"
+                    fill="var(--color-accent)"
                     style={{
                       transform:
                         theme === "light" ? "scaleY(0.06)" : "scaleY(1)",
@@ -117,11 +117,11 @@ export default function Navbar() {
               </svg>
             </button>
             <div className="relative group">
-              <span className="pointer-events-none absolute -top-0.5 -left-0.5 w-[5px] h-[5px] border-t-[1.5px] border-l-[1.5px] border-orange-500 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              <span className="pointer-events-none absolute -top-0.5 -right-0.5 w-[5px] h-[5px] border-t-[1.5px] border-r-[1.5px] border-orange-500 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              <span className="pointer-events-none absolute -bottom-0.5 -left-0.5 w-[5px] h-[5px] border-b-[1.5px] border-l-[1.5px] border-orange-500 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              <span className="pointer-events-none absolute -bottom-0.5 -right-0.5 w-[5px] h-[5px] border-b-[1.5px] border-r-[1.5px] border-orange-500 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              <button className="font-heading relative bg-transparent border border-white/15 text-white/75 text-[12px] font-semibold tracking-wide px-4 py-1.5 rounded-sm cursor-pointer transition-all duration-300 group-hover:text-orange-500 group-hover:border-orange-500/40">
+              <span className="pointer-events-none absolute -top-0.5 -left-0.5 w-[5px] h-[5px] border-t-[1.5px] border-l-[1.5px] border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <span className="pointer-events-none absolute -top-0.5 -right-0.5 w-[5px] h-[5px] border-t-[1.5px] border-r-[1.5px] border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <span className="pointer-events-none absolute -bottom-0.5 -left-0.5 w-[5px] h-[5px] border-b-[1.5px] border-l-[1.5px] border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <span className="pointer-events-none absolute -bottom-0.5 -right-0.5 w-[5px] h-[5px] border-b-[1.5px] border-r-[1.5px] border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <button className="font-heading relative bg-transparent border border-border-interactive text-text-hover text-[12px] font-semibold tracking-wide px-4 py-1.5 rounded-sm cursor-pointer transition-all duration-300 group-hover:text-accent group-hover:border-accent/40">
                 SIGN IN
               </button>
             </div>

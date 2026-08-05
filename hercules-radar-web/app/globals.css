@@ -19,13 +19,21 @@
 
   --color-danger: #ef4444;
   --color-danger-wash: rgba(239, 68, 68, 0.08);
+  /* ---- Navbar-scoped tokens ----*/
+  --color-text-faint: rgba(255, 255, 255, 0.25);
+  --color-text-hover: rgba(255, 255, 255, 0.7);
+  --color-border-interactive: rgba(255, 255, 255, 0.15);
+  --color-surface-panel: #1f2430;
+  --color-text-panel-bright: rgba(255, 255, 255, 0.95);
+  --color-surface-hover: rgba(255, 255, 255, 0.04);
 }
 
 .light {
-  --color-surface-page: #faf6ee;
-  --color-surface-nav: #fff9ee;
-  --color-surface-card: #ffffff;
-  --color-surface-card-hover: #fffdfa;
+  /* ---- Earth-tone palette ---- */
+  --color-surface-page: #e1ccb1;
+  --color-surface-nav: #9c5239;
+  --color-surface-card: #d0ad90;
+  --color-surface-card-hover: #d8b494;
 
   --color-border-subtle: rgba(41, 37, 30, 0.1);
 
@@ -59,6 +67,13 @@
   --color-accent-wash: var(--color-accent-wash);
   --color-danger: var(--color-danger);
   --color-danger-wash: var(--color-danger-wash);
+  --color-text-faint: var(--color-text-faint);
+  --color-text-hover: var(--color-text-hover);
+  --color-border-interactive: var(--color-border-interactive);
+  --color-surface-panel: var(--color-surface-panel);
+  --color-surface-hover: var(--color-surface-hover);
+  --color-text-panel-bright: var(--color-text-panel-bright);
+
 }
 
 body {
@@ -77,7 +92,8 @@ body {
 }
 
 @keyframes dotPulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.3;
     transform: scale(0.7);
   }
