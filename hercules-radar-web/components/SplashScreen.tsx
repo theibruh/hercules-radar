@@ -83,7 +83,7 @@ export default function SplashScreen() {
 
       {/* Did you know card */}
       <div className="bg-surface-card border border-border-subtle rounded-xl px-7 py-5 max-w-[420px] text-center">
-        <p className="text-accent/60 text-[10px] uppercase tracking-[0.12em] mb-2.5">
+        <p className="text-accent-strong/60 text-[10px] uppercase tracking-[0.12em] mb-2.5">
           Did you know?
         </p>
         <p className="font-mono text-text-secondary text-[13px] leading-relaxed">

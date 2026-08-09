@@ -5,13 +5,18 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import RegionSelector from "@/components/RegionSelector";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedRegion = searchParams.get("region") ?? "australia";
   const { theme, toggleTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   return (
     <nav className="fixed top-0 left-0 right-0 z-40 bg-surface-nav/95 backdrop-blur-md border-b border-border-subtle">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
@@ -108,7 +113,7 @@ export default function Navbar() {
                     fill="var(--color-accent)"
                     style={{
                       transform:
-                        theme === "light" ? "scaleY(0.06)" : "scaleY(1)",
+                        mounted && theme === "light" ? "scaleY(0.06)" : "scaleY(1)",
                       transformOrigin: "11px 4px",
                       transition: "transform 0.45s ease",
                     }}

@@ -59,7 +59,7 @@ export default function FlightCard({ flightData }: FlightCardProps) {
             Callsign
           </p>
           <p
-            className={`font-mono font-bold text-[15px] tracking-wide ${isEmergency ? "text-danger" : "text-accent"}`}
+            className={`font-mono font-bold text-[15px] tracking-wide ${isEmergency ? "text-danger" : "text-accent-strong"}`}
           >
             {callsign}
           </p>
@@ -148,7 +148,7 @@ export default function FlightCard({ flightData }: FlightCardProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="text-accent/50 hover:text-accent transition-colors"
+                className="text-accent-strong/50 hover:text-accent-strong transition-colors"
               >
                 planespotters.net
               </a>
@@ -217,7 +217,7 @@ export default function FlightCard({ flightData }: FlightCardProps) {
             </p>
             <button
               onClick={(e) => e.stopPropagation()}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-accent text-[12px] bg-accent-wash border border-accent/35 hover:bg-accent/18 hover:border-accent/60 hover:shadow-[0_0_12px_rgba(249,115,22,0.15)] transition-all duration-200"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-accent-strong text-[12px] bg-accent-wash border border-accent-strong/35 hover:bg-accent-strong/18 hover:border-accent-strong/60 hover:shadow-[0_0_12px_rgba(249,115,22,0.15)] transition-all duration-200"
             >
               ✦ Ask AI about {callsign}
             </button>
