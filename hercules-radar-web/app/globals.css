@@ -54,6 +54,7 @@
 }
 
 @theme inline {
+  --font-serif: var(--font-source-serif-4);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-rajdhani);

@@ -2,7 +2,7 @@
 
 import { useTheme } from "@/components/ThemeProvider";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import RegionSelector from "@/components/RegionSelector";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 export default function Navbar() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const selectedRegion = searchParams.get("region") ?? "australia";
   const { theme, toggleTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -39,16 +40,34 @@ export default function Navbar() {
           <div className="flex items-center gap-6">
             <Link
               href="/"
-              className="font-heading text-accent text-[12px] font-semibold tracking-[0.2em] uppercase"
+              className={`font-heading text-[12px] font-semibold tracking-[0.2em] uppercase transition-colors duration-200 ${
+                pathname === "/"
+                  ? "text-accent"
+                  : "text-text-muted hover:text-text-hover"
+              }`}
             >
               Home
             </Link>
-            <span className="font-heading text-text-muted text-[12px] font-semibold tracking-[0.2em] uppercase cursor-default transition-colors duration-200 hover:text-text-hover">
+            <Link
+              href="/logbook"
+              className={`font-heading text-[12px] font-semibold tracking-[0.2em] uppercase transition-colors duration-200 ${
+                pathname === "/logbook"
+                  ? "text-accent"
+                  : "text-text-muted hover:text-text-hover"
+              }`}
+            >
               Logbook
-            </span>
-            <span className="font-heading text-text-muted text-[12px] font-semibold tracking-[0.2em] uppercase cursor-default transition-colors duration-200 hover:text-text-hover">
+            </Link>
+             <Link
+              href="/about"
+              className={`font-heading text-[12px] font-semibold tracking-[0.2em] uppercase transition-colors duration-200 ${
+                pathname === "/about"
+                  ? "text-accent"
+                  : "text-text-muted hover:text-text-hover"
+              }`}
+            >
               About
-            </span>
+            </Link>
           </div>
         </div>
 
@@ -113,7 +132,9 @@ export default function Navbar() {
                     fill="var(--color-accent)"
                     style={{
                       transform:
-                        mounted && theme === "light" ? "scaleY(0.06)" : "scaleY(1)",
+                        mounted && theme === "light"
+                          ? "scaleY(0.06)"
+                          : "scaleY(1)",
                       transformOrigin: "11px 4px",
                       transition: "transform 0.45s ease",
                     }}
