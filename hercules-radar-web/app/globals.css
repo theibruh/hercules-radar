@@ -20,6 +20,7 @@
   --color-danger: #ef4444;
   --color-danger-wash: rgba(239, 68, 68, 0.08);
   --color-accent-strong: #f97316;
+  --color-success: #4ade80;
 
   /* ---- Navbar-scoped tokens ----*/ --color-text-faint:
     rgba(255, 255, 255, 0.25);
@@ -51,6 +52,7 @@
   --color-danger-wash: rgba(220, 38, 38, 0.06);
 
   --color-accent-strong: #c2410c;
+  --color-success: #16a34a;
 }
 
 @theme inline {
@@ -79,6 +81,7 @@
   --color-surface-hover: var(--color-surface-hover);
   --color-text-panel-bright: var(--color-text-panel-bright);
   --color-accent-strong: var(--color-accent-strong);
+  --color-success: var(--color-success);
 }
 
 body {

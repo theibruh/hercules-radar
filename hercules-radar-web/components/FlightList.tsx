@@ -50,21 +50,21 @@ export default function FlightList({
 
   return (
     <>
-      <div className="flex items-center justify-between text-[11px] text-white/40 uppercase tracking-widest border-b border-white/[0.06] pb-3 mb-2">
+      <div className="flex items-center justify-between text-[11px] text-text-muted uppercase tracking-widest border-b border-border-subtle pb-3 mb-2">
         <span>
           Region:{" "}
-          <span className="text-white/70 font-bold">
+          <span className="text-text-primary font-bold">
             {region.replace("_", " ")}
           </span>
         </span>
         <span>{visibleFlights.length} flights tracked</span>
         <span>
-          Last updated: <span className="text-green-400/70">{timestamp}</span>
+          Last updated: <span className="text-success">{timestamp}</span>
         </span>
       </div>
 
       {visibleFlights.length === 0 ? (
-        <p className="text-center text-red-400/30 text-sm">
+        <p className="text-center text-danger/40 text-md">
           {searchQuery
             ? `No flights matching "${searchQuery}" in this region.`
             : "No flights found or API unavailable."}
