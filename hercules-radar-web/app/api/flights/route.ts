@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Flight } from "@/types/flight";
 import { Region } from "@/types/regions";
+import { getOpenSkyAccessToken } from "@/lib/opensky-auth";
 
 const REGIONS: Record<string, Region> = {
   australia:     { lamin: -44, lomin: 113,  lamax: -10, lomax: 154 },
@@ -34,9 +35,17 @@ export async function GET(request: NextRequest) {
   const region = REGIONS[regionName] ?? REGIONS["australia"];
 
   try {
+
+    const token = await getOpenSkyAccessToken();
+
     const response = await fetch(
       `https://opensky-network.org/api/states/all?lamin=${region.lamin}&lomin=${region.lomin}&lamax=${region.lamax}&lomax=${region.lomax}&extended=1`,
-      { next: { revalidate: 30 } }
+      {
+        next: { revalidate: 30 },
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
     );
 
     if (!response.ok) {
