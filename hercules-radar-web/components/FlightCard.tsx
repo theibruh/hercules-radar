@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Flight } from "@/types/flight";
 import dynamic from "next/dynamic";
 import AircraftPhoto from "@/components/AircraftPhoto";
+import FlightRoute from "@/components/FlightRoute";
 import { getCategoryLabel } from "@/lib/aircraftCategory";
 
 const FlightMap = dynamic(() => import("@/components/FlightMap"), {
@@ -22,6 +23,7 @@ type FlightCardProps = {
 export default function FlightCard({ flightData }: FlightCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [registration, setRegistration] = useState<string | null>(null);
+  const [aircraftModel, setAircraftModel] = useState<{ manufacturer: string | null; type: string | null } | null>(null);
 
   const isEmergency = ["7700", "7600", "7500"].includes(
     flightData.squawk ?? "",
@@ -69,11 +71,9 @@ export default function FlightCard({ flightData }: FlightCardProps) {
 
         <div className="flex-1">
           <p className="text-[10px] uppercase tracking-widest text-text-muted mb-0.5">
-            Country
+            Route
           </p>
-          <p className="font-mono text-[13px] text-text-primary">
-            {flightData.country || "N/A"}
-          </p>
+          <FlightRoute icao24={flightData.icao24} />
         </div>
 
         <div className="w-px self-stretch bg-border-subtle mx-3" />
@@ -82,7 +82,9 @@ export default function FlightCard({ flightData }: FlightCardProps) {
           <p className="text-[10px] uppercase tracking-widest text-text-muted mb-0.5">
             Altitude
           </p>
-          <p className="font-mono text-[13px] text-text-primary">{altitudeFt} ft</p>
+          <p className="font-mono text-[13px] text-text-primary">
+            {altitudeFt} ft
+          </p>
         </div>
 
         <div className="w-px self-stretch bg-border-subtle mx-3" />
@@ -132,6 +134,7 @@ export default function FlightCard({ flightData }: FlightCardProps) {
             <AircraftPhoto
               icao24={flightData.icao24}
               onRegistration={setRegistration}
+              onAircraftModel={setAircraftModel}
             />
             <div>
               <p className="text-[10px] uppercase tracking-widest text-text-muted mb-0.5">
@@ -139,6 +142,14 @@ export default function FlightCard({ flightData }: FlightCardProps) {
               </p>
               <p className="font-mono text-[13px] text-text-primary">
                 {registration ?? "—"}
+              </p>
+            </div>
+            <div>
+              <p className="text-[10px] uppercase tracking-widest text-text-muted mb-0.5">
+                Aircraft Model
+              </p>
+              <p className="font-mono text-[13px] text-text-primary">
+                {aircraftModel?.manufacturer ?? "—"} {" "} {aircraftModel?.type ?? "—"}
               </p>
             </div>
             <p className="text-[9px] text-text-muted">

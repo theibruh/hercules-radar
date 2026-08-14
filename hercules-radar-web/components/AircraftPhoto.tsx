@@ -11,9 +11,10 @@ type PhotoData = {
 type AircraftPhotoProps = {
   icao24: string;
   onRegistration?: (registration: string | null) => void;
+  onAircraftModel?: (model: { manufacturer: string | null; type: string | null }) => void;
 };
 
-export default function AircraftPhoto({ icao24, onRegistration }: AircraftPhotoProps) {
+export default function AircraftPhoto({ icao24, onRegistration, onAircraftModel }: AircraftPhotoProps) {
   const [photo, setPhoto] = useState<PhotoData | null>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "empty">("loading");
 
@@ -29,6 +30,7 @@ export default function AircraftPhoto({ icao24, onRegistration }: AircraftPhotoP
         setPhoto(data.photo);
         setStatus(data.photo?.src ? "ready" : "empty");
         onRegistration?.(data.registration ?? null);
+        onAircraftModel?.(data.aircraftModel ?? null);
       } catch {
         if (!cancelled) setStatus("empty");
       }
@@ -38,12 +40,12 @@ export default function AircraftPhoto({ icao24, onRegistration }: AircraftPhotoP
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- onRegistration is a stable setState callback from the parent
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- as onRegistration/onAircraftModel are stable setState callbacks from the parent
   }, [icao24]);
 
   if (status === "loading") {
     return (
-      <div className="w-full h-55 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-white/20 text-[11px] animate-pulse">
+      <div className="w-full h-55 rounded-lg bg-surface-card border border-border-subtle flex items-center justify-center text-text-muted text-[11px] animate-pulse">
         Loading photo...
       </div>
     );
@@ -51,7 +53,7 @@ export default function AircraftPhoto({ icao24, onRegistration }: AircraftPhotoP
 
   if (status === "empty" || !photo?.src) {
     return (
-      <div className="w-full h-55 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-white/20 text-[11px]">
+      <div className="w-full h-55 rounded-lg bg-surface-card border border-border-subtle flex items-center justify-center text-text-muted text-[11px]">
         No photo available
       </div>
     );
@@ -63,7 +65,7 @@ export default function AircraftPhoto({ icao24, onRegistration }: AircraftPhotoP
       target="_blank"
       rel="noopener noreferrer"
       onClick={(e) => e.stopPropagation()}
-      className="relative block w-full h-55 rounded-lg overflow-hidden border border-white/[0.08]"
+      className="relative block w-full h-55 rounded-lg overflow-hidden border border-border-subtle"
     >
       {/* eslint-disable-next-line @next/next/no-img-element -- external, unconfigured CDN domain from planespotters */}
       <img

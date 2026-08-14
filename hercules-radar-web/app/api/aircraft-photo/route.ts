@@ -7,19 +7,22 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Missing icao24" }, { status: 400 });
   }
 
-  const [photoResult, registrationResult] = await Promise.allSettled([
+  const [photoResult, registrationResult, aircraftModelResult] = await Promise.allSettled([
     fetchPhoto(icao24),
     fetchRegistration(icao24),
+    fetchAircraftModel(icao24),
   ]);
 
   return NextResponse.json({
     photo: photoResult.status === "fulfilled" ? photoResult.value : null,
     registration:
       registrationResult.status === "fulfilled" ? registrationResult.value : null,
+    aircraftModel:
+      aircraftModelResult.status === "fulfilled" ? aircraftModelResult.value : null,
   });
 }
 
-async function fetchPhoto(icao24: string) {
+async function fetchPhoto(icao24: string){
   const response = await fetch(
     `https://api.planespotters.net/pub/photos/hex/${icao24}`,
     {
@@ -53,4 +56,15 @@ async function fetchRegistration(icao24: string) {
 
   const data = await response.json();
   return data.Registration ?? null;
+}
+
+async function fetchAircraftModel(icao24: string) {
+  const response = await fetch(`https://hexdb.io/api/v1/aircraft/${icao24}`, {
+    next: { revalidate: 3600 },
+  });
+  
+  if (!response.ok) return null;
+
+  const data = await response.json();
+  return { manufacturer: data.Manufacturer ?? null, type: data.Type ?? null };
 }

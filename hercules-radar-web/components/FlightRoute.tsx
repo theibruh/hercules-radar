@@ -35,11 +35,16 @@ export default function FlightRoute({ icao24 }: { icao24: string }) {
     return () => observer.disconnect();
   }, [icao24]);
 
+  const origin = route?.origin;
+  const destination = route?.destination;
+
   return (
-    <div ref={elementRef} className="font-mono text-[14px]">
-      {route?.origin && route?.destination ? (
-        <span className="font-semibold text-text-primary">
-          {route.origin} <span className="text-text-muted">→</span> {route.destination}
+    <div ref={elementRef} className="font-mono text-[13px]">
+      {origin || destination ? (
+        <span className="text-text-primary">
+          {origin ?? <span className="text-text-muted">—</span>}{" "}
+          <span className="text-text-muted">→</span>{" "}
+          {destination ?? <span className="text-text-muted">—</span>}
         </span>
       ) : (
         <span className="text-text-muted">—</span>
