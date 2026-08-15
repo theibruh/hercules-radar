@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 const SECTIONS = [
   { id: "spruce-goose", number: "01", title: "The Spruce Goose" },
@@ -66,18 +67,46 @@ export default function AboutPage() {
             THE SPRUCE GOOSE
           </h1>
           <p className="font-serif text-text-primary text-[16px] leading-[1.75] mb-4">
+            Built during the Second World War, the H-4 Hercules was Howard
+            Hughes&apos;s answer to a wartime steel shortage — wartime
+            restrictions on aluminum forced the entire airframe to be built from
+            laminated birch instead, which is exactly where its dismissive
+            nickname came from, despite never actually containing any spruce at
+            all. At 320 feet, its wingspan was the largest of any aircraft ever
+            built, a record that stood for over seventy years.
+          </p>
+          <p className="font-serif text-text-primary text-[16px] leading-[1.75] mb-4">
             On November 2, 1947, Howard Hughes climbed into the cockpit of the
             largest aircraft ever built and taxied it across Long Beach Harbor.
             What happened next was never meant to make history the way it did —
             the H-4 Hercules lifted roughly seventy feet off the water and flew
             for about a mile before touching back down. It never flew again.
           </p>
+
+          <figure className="my-8">
+            <Image
+              src="/about/SIA-SIA2012-0951.jpg"
+              alt="The H-4 Hercules landing off the California coast, November 2, 1947"
+              width={640}
+              height={420}
+              className="rounded-lg w-full h-auto"
+            />
+            <figcaption className="font-heading text-text-muted text-[11px] mt-2">
+              The H-4 Hercules touches back down off the California coast,
+              November 2, 1947. Source: Smithsonian Institution Archives
+              (SIA2012-0951).
+            </figcaption>
+          </figure>
+
           <p className="font-serif text-text-primary text-[16px] leading-[1.75]">
             Before Congress, Hughes had defended the project against accusations
             of waste with a line that would outlive the aircraft itself:{" "}
             <span className="italic">
               &ldquo;I put the sweat of my life into this thing.&rdquo;
-            </span>
+            </span>{" "}
+            The Hercules never flew again, but it still exists today — on
+            permanent display at the Evergreen Aviation &amp; Space Museum in
+            McMinnville, Oregon.
           </p>
         </section>
 
