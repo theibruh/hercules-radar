@@ -147,7 +147,7 @@ export default function Navbar() {
               <span className="pointer-events-none absolute -top-0.5 -right-0.5 w-[5px] h-[5px] border-t-[1.5px] border-r-[1.5px] border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               <span className="pointer-events-none absolute -bottom-0.5 -left-0.5 w-[5px] h-[5px] border-b-[1.5px] border-l-[1.5px] border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               <span className="pointer-events-none absolute -bottom-0.5 -right-0.5 w-[5px] h-[5px] border-b-[1.5px] border-r-[1.5px] border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              <button className="font-heading relative bg-transparent border border-border-interactive text-text-hover text-[12px] font-semibold tracking-wide px-4 py-1.5 rounded-sm cursor-pointer transition-all duration-300 group-hover:text-accent group-hover:border-accent/40">
+              <button className="font-heading relative bg-transparent border border-border-interactive text-text-hover text-[12px] font-semibold tracking-wide px-5 py-1.5 rounded-sm cursor-pointer transition-all duration-300 group-hover:text-accent group-hover:border-accent/40">
                 SIGN IN
               </button>
             </div>
