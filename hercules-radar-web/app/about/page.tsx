@@ -40,19 +40,19 @@ export default function AboutPage() {
   }, []);
 
   useEffect(() => {
-  console.log(
-    "%c✦ HERCULES RADAR",
-    "color: #f97316; font-size: 20px; font-weight: bold;"
-  );
-  console.log(
-    "%cYou found the console. This whole app is a solo build and emotionally supported by caffeine. ☕",
-    "color: #888; font-size: 13px;"
-  );
-  console.log(
-    "%cgithub.com/theibruh/hercules-radar",
-    "color: #f97316; font-size: 13px;"
-  );
-}, []);
+    console.log(
+      "%c✦ HERCULES RADAR",
+      "color: #f97316; font-size: 20px; font-weight: bold;",
+    );
+    console.log(
+      "%cYou found the console. This whole app is a solo build and is emotionally supported by caffeine. :))) ☕",
+      "color: #888; font-size: 13px;",
+    );
+    console.log(
+      "%cgithub.com/theibruh/hercules-radar",
+      "color: #f97316; font-size: 13px;",
+    );
+  }, []);
 
   return (
     <div className="max-w-7xl mx-auto flex gap-12 px-6 pt-8">
