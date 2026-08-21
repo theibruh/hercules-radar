@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+:root {
+  /* ---- Semantic theme tokens: DARK (default) ---- */
+  --color-surface-page: #0a0f1a;
+  --color-surface-nav: #292e37;
+  --color-surface-card: rgba(255, 255, 255, 0.06);
+  --color-surface-card-hover: rgba(255, 255, 255, 0.065);
+
+  --color-border-subtle: rgba(255, 255, 255, 0.06);
+
+  --color-text-primary: rgba(255, 255, 255, 0.85);
+  --color-text-secondary: rgba(255, 255, 255, 0.5);
+  --color-text-muted: rgba(255, 255, 255, 0.3);
+
+  --color-accent: #f97316;
+  --color-accent-frame: #c2410c;
+  --color-accent-wash: rgba(249, 115, 22, 0.1);
+
+  --color-danger: #ef4444;
+  --color-danger-wash: rgba(239, 68, 68, 0.08);
+  --color-accent-strong: #f97316;
+  --color-success: #4ade80;
+
+  /* ---- Navbar-scoped tokens ----*/ --color-text-faint:
+    rgba(255, 255, 255, 0.25);
+  --color-text-hover: rgba(255, 255, 255, 0.7);
+  --color-border-interactive: rgba(255, 255, 255, 0.15);
+  --color-surface-panel: #1f2430;
+  --color-text-panel-bright: rgba(255, 255, 255, 0.95);
+  --color-surface-hover: rgba(255, 255, 255, 0.04);
+}
+
+.light {
+  /* ---- Earth-tone palette ---- */
+  --color-surface-page: #e1ccb1;
+  --color-surface-nav: #9c5239;
+  --color-surface-card: #d0ad90;
+  --color-surface-card-hover: #d8b494;
+
+  --color-border-subtle: rgba(41, 37, 30, 0.1);
+
+  --color-text-primary: #2a2a28;
+  --color-text-secondary: rgba(42, 42, 40, 0.6);
+  --color-text-muted: rgba(42, 42, 40, 0.4);
+
+  --color-accent: #f97316;
+  --color-accent-frame: #c2410c;
+  --color-accent-wash: rgba(249, 115, 22, 0.1);
+
+  --color-danger: #dc2626;
+  --color-danger-wash: rgba(220, 38, 38, 0.06);
+
+  --color-accent-strong: #c2410c;
+  --color-success: #16a34a;
+}
+
+@theme inline {
+  --font-serif: var(--font-source-serif-4);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-rajdhani);
+
+  --color-surface-page: var(--color-surface-page);
+  --color-surface-nav: var(--color-surface-nav);
+  --color-surface-card: var(--color-surface-card);
+  --color-surface-card-hover: var(--color-surface-card-hover);
+  --color-border-subtle: var(--color-border-subtle);
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-muted: var(--color-text-muted);
+  --color-accent: var(--color-accent);
+  --color-accent-frame: var(--color-accent-frame);
+  --color-accent-wash: var(--color-accent-wash);
+  --color-danger: var(--color-danger);
+  --color-danger-wash: var(--color-danger-wash);
+  --color-text-faint: var(--color-text-faint);
+  --color-text-hover: var(--color-text-hover);
+  --color-border-interactive: var(--color-border-interactive);
+  --color-surface-panel: var(--color-surface-panel);
+  --color-surface-hover: var(--color-surface-hover);
+  --color-text-panel-bright: var(--color-text-panel-bright);
+  --color-accent-strong: var(--color-accent-strong);
+  --color-success: var(--color-success);
+}
+
+body {
+  background: var(--color-surface-page);
+  color: var(--color-text-primary);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@keyframes fillReveal {
+  0% {
+    clip-path: inset(100% 0 0 0);
+  }
+  100% {
+    clip-path: inset(0% 0 0 0);
+  }
+}
+
+@keyframes dotPulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
