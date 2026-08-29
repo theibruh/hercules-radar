@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const token = await getOpenSkyAccessToken();
-    const nowSeconds = Math.floor(Date.now() / 1000);
+    const nowSeconds = Math.floor(Date.now() / 1000/3600) * 3600; // Round down to the nearest hour to avoid OpenSky API errors as revalidation doesnt work when url keeps on changing due to seconds changing every second. 
     const beginSeconds = nowSeconds - 24 * 60 * 60;
 
     const response = await fetch(

@@ -64,7 +64,7 @@ export default function FlightList({
       </div>
 
       {visibleFlights.length === 0 ? (
-        <p className="text-center text-danger/40 text-md">
+        <p className="text-center text-danger/40 text-base">
           {searchQuery
             ? `No flights matching "${searchQuery}" in this region.`
             : "No flights found or API unavailable."}

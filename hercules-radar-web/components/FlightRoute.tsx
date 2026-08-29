@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { getIataCode } from "@/lib/airportCodes";
 
 type RouteData = {
   origin: string | null;
@@ -35,8 +36,8 @@ export default function FlightRoute({ icao24 }: { icao24: string }) {
     return () => observer.disconnect();
   }, [icao24]);
 
-  const origin = route?.origin;
-  const destination = route?.destination;
+  const origin = getIataCode(route?.origin ?? null);
+  const destination = getIataCode(route?.destination ?? null);
 
   return (
     <div ref={elementRef} className="font-mono text-[13px]">
