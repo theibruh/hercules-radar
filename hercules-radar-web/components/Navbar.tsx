@@ -13,7 +13,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const selectedRegion = searchParams.get("region") ?? "australia";
   const { theme, toggleTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState<boolean>(false);
 
   useEffect(() => {
     setMounted(true);
@@ -132,9 +132,9 @@ export default function Navbar() {
                     fill="var(--color-accent)"
                     style={{
                       transform:
-                        mounted && theme === "light"
-                          ? "scaleY(0.06)"
-                          : "scaleY(1)",
+                        mounted && theme === "dark"
+                          ? "scaleY(1)"
+                          : "scaleY(0.06)",
                       transformOrigin: "11px 4px",
                       transition: "transform 0.45s ease",
                     }}
