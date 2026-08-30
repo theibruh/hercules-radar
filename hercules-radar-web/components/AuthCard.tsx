@@ -24,6 +24,7 @@ export default function AuthCard({ onClose }: AuthCardProps) {
     theme === "light"
       ? "/about/engine-blueprint-light.png"
       : "/about/engine-blueprint-dark.png";
+  const authAccent = theme === "light" ? "#c2410c" : "#e1ccb1";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -62,6 +63,12 @@ export default function AuthCard({ onClose }: AuthCardProps) {
 
   return (
     <div className="fixed inset-0 z-50">
+      <style>{`
+        .auth-input:focus {
+          border-color: ${authAccent} !important;
+        }
+      `}</style>
+
       <Image
         src={backgroundImage}
         alt=""
@@ -79,52 +86,51 @@ export default function AuthCard({ onClose }: AuthCardProps) {
           className="relative w-[360px]"
           onClick={(e) => e.stopPropagation()}
         >
-          <span className="absolute -top-3 -left-3 w-4 h-4 border-t-2 border-l-2 border-accent" />
-          <span className="absolute -top-3 -right-3 w-4 h-4 border-t-2 border-r-2 border-accent" />
-          <span className="absolute -bottom-3 -left-3 w-4 h-4 border-b-2 border-l-2 border-accent" />
-          <span className="absolute -bottom-3 -right-3 w-4 h-4 border-b-2 border-r-2 border-accent" />
+          <span style={{ borderColor: authAccent }} className="absolute -top-3 -left-3 w-4 h-4 border-t-2 border-l-2" />
+          <span style={{ borderColor: authAccent }} className="absolute -top-3 -right-3 w-4 h-4 border-t-2 border-r-2" />
+          <span style={{ borderColor: authAccent }} className="absolute -bottom-3 -left-3 w-4 h-4 border-b-2 border-l-2" />
+          <span style={{ borderColor: authAccent }} className="absolute -bottom-3 -right-3 w-4 h-4 border-b-2 border-r-2" />
 
-          <div className="bg-surface-panel border border-white/[0.08] rounded-sm shadow-[0_8px_40px_rgba(0,0,0,0.5)] p-7">
-            <p className="font-heading text-text-faint text-[11px] tracking-[0.2em] mb-1">
+          <div className="bg-surface-page border border-border-subtle rounded-sm shadow-[0_8px_40px_rgba(0,0,0,0.5)] p-7">
+            <p className="font-heading text-text-muted text-[11px] tracking-[0.2em] mb-1">
               ACCOUNT ACCESS
             </p>
 
             {confirmationSent ? (
               <div className="pt-4">
-                <p className="font-heading text-accent text-[15px] font-bold tracking-[0.05em] mb-3">
+                <p style={{ color: authAccent }} className="font-heading text-[15px] font-bold tracking-[0.05em] mb-3">
                   CHECK YOUR EMAIL
                 </p>
-                <p className="font-heading text-text-hover text-[13px] leading-relaxed">
+                <p className="font-heading text-text-secondary text-[13px] leading-relaxed">
                   We sent a confirmation link to{" "}
                   <span className="text-text-primary font-semibold">{email}</span>.
                   Click it to activate your account, then sign in.
                 </p>
                 <button
                   onClick={onClose}
-                  className="font-heading w-full mt-6 bg-accent text-surface-panel font-bold text-[13px] tracking-[0.1em] py-2.5 rounded-sm"
+                  style={{ backgroundColor: authAccent }}
+                  className="font-heading w-full mt-6 text-surface-page font-bold text-[13px] tracking-[0.1em] py-2.5 rounded-sm"
                 >
                   GOT IT
                 </button>
               </div>
             ) : (
               <>
-                <div className="flex gap-5 border-b border-white/10 mb-6">
+                <div className="flex gap-5 border-b border-border-subtle mb-6">
                   <button
                     onClick={() => setMode("signup")}
+                    style={mode === "signup" ? { color: authAccent, borderColor: authAccent } : undefined}
                     className={`font-heading text-[13px] font-bold tracking-[0.1em] pb-2.5 -mb-px border-b-2 transition-colors ${
-                      mode === "signup"
-                        ? "text-accent border-accent"
-                        : "text-text-faint border-transparent"
+                      mode === "signup" ? "" : "text-text-muted border-transparent"
                     }`}
                   >
                     SIGN UP
                   </button>
                   <button
                     onClick={() => setMode("signin")}
+                    style={mode === "signin" ? { color: authAccent, borderColor: authAccent } : undefined}
                     className={`font-heading text-[13px] font-semibold tracking-[0.1em] pb-2.5 -mb-px border-b-2 transition-colors ${
-                      mode === "signin"
-                        ? "text-accent border-accent"
-                        : "text-text-faint border-transparent"
+                      mode === "signin" ? "" : "text-text-muted border-transparent"
                     }`}
                   >
                     SIGN IN
@@ -134,7 +140,7 @@ export default function AuthCard({ onClose }: AuthCardProps) {
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4 ">
                   {mode === "signup" && (
                     <div>
-                      <label className="font-heading text-text-faint text-[10px] tracking-[0.15em] block mb-1.5">
+                      <label className="font-heading text-text-secondary text-[10px] tracking-[0.15em] block mb-1.5">
                         DISPLAY NAME
                       </label>
                       <input
@@ -142,13 +148,13 @@ export default function AuthCard({ onClose }: AuthCardProps) {
                         required
                         value={displayName}
                         onChange={(e) => setDisplayName(e.target.value)}
-                        className="w-full bg-transparent border-b border-border-interactive text-text-hover text-[14px] pb-1.5 outline-none focus:border-accent transition-colors"
+                        className="auth-input w-full bg-transparent border-b border-border-subtle text-text-secondary text-[14px] pb-1.5 outline-none transition-colors"
                       />
                     </div>
                   )}
 
                   <div>
-                    <label className="font-heading text-text-faint text-[10px] tracking-[0.15em] block mb-1.5">
+                    <label className="font-heading text-text-secondary text-[10px] tracking-[0.15em] block mb-1.5">
                       EMAIL
                     </label>
                     <input
@@ -156,12 +162,12 @@ export default function AuthCard({ onClose }: AuthCardProps) {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-transparent border-b border-border-interactive text-text-hover text-[14px] pb-1.5 outline-none focus:border-accent transition-colors"
+                      className="auth-input w-full bg-transparent border-b border-border-subtle text-text-secondary text-[14px] pb-1.5 outline-none transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label className="font-heading text-text-faint text-[10px] tracking-[0.15em] block mb-1.5">
+                    <label className="font-heading text-text-secondary text-[10px] tracking-[0.15em] block mb-1.5">
                       PASSWORD
                     </label>
                     <input
@@ -170,7 +176,7 @@ export default function AuthCard({ onClose }: AuthCardProps) {
                       minLength={6}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full bg-transparent border-b border-border-interactive text-text-hover text-[14px] pb-1.5 outline-none focus:border-accent transition-colors"
+                      className="auth-input w-full bg-transparent border-b border-border-subtle text-text-secondary text-[14px] pb-1.5 outline-none transition-colors"
                     />
                   </div>
 
@@ -179,16 +185,17 @@ export default function AuthCard({ onClose }: AuthCardProps) {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="font-heading w-full mt-2 bg-accent text-surface-panel font-bold text-[13px] tracking-[0.1em] py-2.5 rounded-sm disabled:opacity-50 transition-opacity cursor-pointer"
+                    style={{ backgroundColor: authAccent }}
+                    className="font-heading w-full mt-2 text-surface-page font-bold text-[13px] tracking-[0.1em] py-2.5 rounded-sm disabled:opacity-50 transition-opacity cursor-pointer"
                   >
                     {loading ? "..." : mode === "signup" ? "CREATE ACCOUNT" : "SIGN IN"}
                   </button>
                 </form>
 
-                <p className="font-heading text-center text-text-faint text-[11px] mt-4 ">
+                <p className="font-heading text-center text-text-muted text-[11px] mt-4 ">
                   <button
                     onClick={onClose}
-                    className="underline hover:text-text-hover transition-colors"
+                    className="underline hover:text-text-secondary transition-colors"
                   >
                     Continue browsing
                   </button>
