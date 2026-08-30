@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { archiveLogEntry, deleteLogEntry } from "@/lib/logEntries";
 
 export type LogEntry = {
   id: string;
@@ -18,8 +19,7 @@ export type LogEntry = {
 type LogEntryCardProps = {
   entry: LogEntry;
   isOwner: boolean;
-  onArchive?: (id: string) => void;
-  onDelete?: (id: string) => void;
+  onChanged?: () => void;
 };
 
 function timeAgo(dateString: string): string {
@@ -33,8 +33,27 @@ function timeAgo(dateString: string): string {
   return `${days}d ago`;
 }
 
-export default function LogEntryCard({ entry, isOwner, onArchive, onDelete }: LogEntryCardProps) {
+export default function LogEntryCard({ entry, isOwner, onChanged }: LogEntryCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  async function handleArchive() {
+    setBusy(true);
+    await archiveLogEntry(entry.id);
+    setBusy(false);
+    setMenuOpen(false);
+    onChanged?.();
+  }
+
+  async function handleDeleteConfirm() {
+    setBusy(true);
+    await deleteLogEntry(entry.id);
+    setBusy(false);
+    setConfirmingDelete(false);
+    setMenuOpen(false);
+    onChanged?.();
+  }
 
   return (
     <div className="group relative bg-surface-card border border-border-subtle rounded-xl overflow-hidden max-w-md w-full">
@@ -60,25 +79,45 @@ export default function LogEntryCard({ entry, isOwner, onArchive, onDelete }: Lo
               ⋯
             </button>
             {menuOpen && (
-              <div className="absolute right-0 top-6 bg-surface-panel border border-border-interactive rounded-sm overflow-hidden z-10 w-28">
-                <button
-                  onClick={() => {
-                    onArchive?.(entry.id);
-                    setMenuOpen(false);
-                  }}
-                  className="w-full text-left px-3 py-2 font-heading text-text-hover text-[12px] hover:bg-surface-hover transition-colors"
-                >
-                  Archive
-                </button>
-                <button
-                  onClick={() => {
-                    onDelete?.(entry.id);
-                    setMenuOpen(false);
-                  }}
-                  className="w-full text-left px-3 py-2 font-heading text-danger text-[12px] hover:bg-surface-hover transition-colors"
-                >
-                  Delete
-                </button>
+              <div className="absolute right-0 top-6 bg-surface-panel border border-border-interactive rounded-sm overflow-hidden z-10 w-40">
+                {confirmingDelete ? (
+                  <div className="p-2.5 flex flex-col gap-2">
+                    <p className="font-heading text-text-hover text-[11px]">
+                      Delete this post?
+                    </p>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handleDeleteConfirm}
+                        disabled={busy}
+                        className="flex-1 bg-danger text-surface-panel text-[11px] font-heading font-bold py-1.5 rounded-sm disabled:opacity-50"
+                      >
+                        {busy ? "..." : "Delete"}
+                      </button>
+                      <button
+                        onClick={() => setConfirmingDelete(false)}
+                        className="flex-1 text-text-muted text-[11px] font-heading hover:text-text-hover transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <button
+                      onClick={handleArchive}
+                      disabled={busy}
+                      className="w-full text-left px-3 py-2 font-heading text-text-hover text-[12px] hover:bg-surface-hover transition-colors disabled:opacity-50"
+                    >
+                      Archive
+                    </button>
+                    <button
+                      onClick={() => setConfirmingDelete(true)}
+                      className="w-full text-left px-3 py-2 font-heading text-danger text-[12px] hover:bg-surface-hover transition-colors"
+                    >
+                      Delete
+                    </button>
+                  </>
+                )}
               </div>
             )}
           </div>

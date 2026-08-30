@@ -1,30 +1,34 @@
-// app/logbook/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useUser } from "@/hooks/useUser";
 import AuthCard from "@/components/AuthCard";
+import CreateLogEntryModal from "@/components/CreateLogEntryModal";
 import LogEntryCard, { LogEntry } from "@/components/LogEntryCard";
-
-const MOCK_ENTRIES: LogEntry[] = [
-  {
-    id: "1",
-    callsign: "QFA7583",
-    aircraftType: "Boeing 737-800",
-    registration: "VH-XZH",
-    location: "Sydney, 34L",
-    notes: "Caught this one on late final, gorgeous evening light off the wing.",
-    photoUrl: null,
-    isPublic: true,
-    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    posterName: "theibruh",
-  },
-];
+import { fetchFeedEntries, fetchPrivateEntries, fetchArchivedEntries } from "@/lib/logEntries";
 
 export default function LogbookPage() {
   const { user, loading } = useUser();
   const [showAuth, setShowAuth] = useState(false);
-  const [view, setView] = useState<"feed" | "private">("feed");
+  const [showCreate, setShowCreate] = useState(false);
+  const [view, setView] = useState<"feed" | "private" | "archived">("feed");
+  const [entries, setEntries] = useState<LogEntry[]>([]);
+  const [entriesLoading, setEntriesLoading] = useState(true);
+
+  const refetch = useCallback(() => {
+    if (!user) return;
+    setEntriesLoading(true);
+    const fetchFn =
+      view === "feed" ? fetchFeedEntries : view === "private" ? fetchPrivateEntries : fetchArchivedEntries;
+    fetchFn().then((data) => {
+      setEntries(data);
+      setEntriesLoading(false);
+    });
+  }, [view, user]);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   if (loading) {
     return null;
@@ -62,9 +66,7 @@ export default function LogbookPage() {
         <button
           onClick={() => setView("feed")}
           className={`font-heading text-[13px] font-bold tracking-[0.1em] pb-3 -mb-px border-b-2 transition-colors ${
-            view === "feed"
-              ? "text-accent border-accent"
-              : "text-text-muted border-transparent"
+            view === "feed" ? "text-accent border-accent" : "text-text-muted border-transparent"
           }`}
         >
           FEED
@@ -72,39 +74,55 @@ export default function LogbookPage() {
         <button
           onClick={() => setView("private")}
           className={`font-heading text-[13px] font-bold tracking-[0.1em] pb-3 -mb-px border-b-2 transition-colors ${
-            view === "private"
-              ? "text-accent border-accent"
-              : "text-text-muted border-transparent"
+            view === "private" ? "text-accent border-accent" : "text-text-muted border-transparent"
           }`}
         >
           PRIVATE
         </button>
+        <button
+          onClick={() => setView("archived")}
+          className={`font-heading text-[13px] font-bold tracking-[0.1em] pb-3 -mb-px border-b-2 transition-colors ${
+            view === "archived" ? "text-accent border-accent" : "text-text-muted border-transparent"
+          }`}
+        >
+          ARCHIVED
+        </button>
       </div>
 
       <div className="flex flex-col items-center gap-6">
-        {MOCK_ENTRIES.length === 0 ? (
+        {entriesLoading ? (
+          <p className="font-serif text-text-muted text-center py-16">Loading...</p>
+        ) : entries.length === 0 ? (
           <p className="font-serif text-text-muted text-center py-16">
-            {view === "feed" ? "No public posts yet." : "You haven't logged anything yet."}
+            {view === "feed"
+              ? "No public posts yet."
+              : view === "private"
+                ? "You haven't logged anything yet."
+                : "Nothing archived."}
           </p>
         ) : (
-          MOCK_ENTRIES.map((entry) => (
+          entries.map((entry) => (
             <LogEntryCard
               key={entry.id}
               entry={entry}
-              isOwner={view === "private"}
-              onArchive={(id) => console.log("archive", id)}
-              onDelete={(id) => console.log("delete", id)}
+              isOwner={view === "private" || view === "archived"}
+              onChanged={refetch}
             />
           ))
         )}
       </div>
 
       <button
+        onClick={() => setShowCreate(true)}
         className="fixed bottom-8 right-8 w-14 h-14 rounded-full bg-accent text-surface-page flex items-center justify-center text-2xl font-bold shadow-[0_4px_20px_rgba(0,0,0,0.3)] z-30"
         aria-label="Create new log entry"
       >
         +
       </button>
+
+      {showCreate && (
+        <CreateLogEntryModal onClose={() => setShowCreate(false)} onCreated={refetch} />
+      )}
     </div>
   );
 }
