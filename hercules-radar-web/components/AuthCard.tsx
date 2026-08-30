@@ -1,195 +1,203 @@
-// components/Navbar.tsx
 "use client";
 
-import { useTheme } from "@/components/ThemeProvider";
+import { useState } from "react";
 import Image from "next/image";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import RegionSelector from "@/components/RegionSelector";
-import AuthCard from "@/components/AuthCard";
-import { useUser } from "@/hooks/useUser";
 import { createClient } from "@/lib/supabase/client";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useTheme } from "@/components/ThemeProvider";
 
-export default function Navbar() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const selectedRegion = searchParams.get("region") ?? "australia";
-  const { theme, toggleTheme } = useTheme();
-  const [mounted, setMounted] = useState<boolean>(false);
-  const [showAuth, setShowAuth] = useState(false);
-  const { user } = useUser();
+type AuthCardProps = {
+  onClose: () => void;
+};
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+export default function AuthCard({ onClose }: AuthCardProps) {
+  const [mode, setMode] = useState<"signup" | "signin">("signup");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [confirmationSent, setConfirmationSent] = useState(false);
 
-  async function handleSignOut() {
-    const supabase = createClient();
-    await supabase.auth.signOut();
+  const supabase = createClient();
+  const { theme } = useTheme();
+  const backgroundImage =
+    theme === "light"
+      ? "/about/engine-blueprint-light.png"
+      : "/about/engine-blueprint-dark.png";
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    if (mode === "signup") {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { display_name: displayName },
+        },
+      });
+      if (error) {
+        setError(error.message);
+      } else if (!data.session) {
+        setConfirmationSent(true);
+      } else {
+        onClose();
+      }
+    } else {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) {
+        setError(error.message);
+      } else {
+        onClose();
+      }
+    }
+
+    setLoading(false);
   }
 
-  const displayName = user?.user_metadata?.display_name ?? "Account";
-
   return (
-    <>
-      <nav className="fixed top-0 left-0 right-0 z-40 bg-surface-nav/95 backdrop-blur-md border-b border-border-subtle">
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
-          <div className="flex items-center gap-10">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="relative w-11 h-11">
-                <Image
-                  src="/SpruceGoose-transparent.png"
-                  alt="Hercules Radar"
-                  fill
-                  sizes="44px"
-                  className="object-contain"
-                />
+    <div className="fixed inset-0 z-50">
+      <Image
+        src={backgroundImage}
+        alt=""
+        fill
+        className="object-cover"
+        priority
+      />
+      <div className="absolute inset-0 bg-black/50" />
+
+      <div
+        className="relative w-full h-full flex items-center justify-center"
+        onClick={onClose}
+      >
+        <div
+          className="relative w-[360px]"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <span className="absolute -top-3 -left-3 w-4 h-4 border-t-2 border-l-2 border-accent" />
+          <span className="absolute -top-3 -right-3 w-4 h-4 border-t-2 border-r-2 border-accent" />
+          <span className="absolute -bottom-3 -left-3 w-4 h-4 border-b-2 border-l-2 border-accent" />
+          <span className="absolute -bottom-3 -right-3 w-4 h-4 border-b-2 border-r-2 border-accent" />
+
+          <div className="bg-surface-panel border border-white/[0.08] rounded-sm shadow-[0_8px_40px_rgba(0,0,0,0.5)] p-7">
+            <p className="font-heading text-text-faint text-[11px] tracking-[0.2em] mb-1">
+              ACCOUNT ACCESS
+            </p>
+
+            {confirmationSent ? (
+              <div className="pt-4">
+                <p className="font-heading text-accent text-[15px] font-bold tracking-[0.05em] mb-3">
+                  CHECK YOUR EMAIL
+                </p>
+                <p className="font-heading text-text-hover text-[13px] leading-relaxed">
+                  We sent a confirmation link to{" "}
+                  <span className="text-text-primary font-semibold">{email}</span>.
+                  Click it to activate your account, then sign in.
+                </p>
+                <button
+                  onClick={onClose}
+                  className="font-heading w-full mt-6 bg-accent text-surface-panel font-bold text-[13px] tracking-[0.1em] py-2.5 rounded-sm"
+                >
+                  GOT IT
+                </button>
               </div>
-              <span className="text-text-primary font-heading font-bold text-xl tracking-widest">
-                HERCULES RADAR
-              </span>
-            </Link>
-
-            <div className="flex items-center gap-6">
-              <Link
-                href="/"
-                className={`font-heading text-[12px] font-semibold tracking-[0.2em] uppercase transition-colors duration-200 ${
-                  pathname === "/"
-                    ? "text-accent"
-                    : "text-text-muted hover:text-text-hover"
-                }`}
-              >
-                Home
-              </Link>
-              <Link
-                href="/logbook"
-                className={`font-heading text-[12px] font-semibold tracking-[0.2em] uppercase transition-colors duration-200 ${
-                  pathname === "/logbook"
-                    ? "text-accent"
-                    : "text-text-muted hover:text-text-hover"
-                }`}
-              >
-                Logbook
-              </Link>
-              <Link
-                href="/about"
-                className={`font-heading text-[12px] font-semibold tracking-[0.2em] uppercase transition-colors duration-200 ${
-                  pathname === "/about"
-                    ? "text-accent"
-                    : "text-text-muted hover:text-text-hover"
-                }`}
-              >
-                About
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-5">
-            <div className="flex flex-col gap-1 w-[150px]">
-              <div className="flex gap-[3px] mb-[3px]">
-                <span className="w-px h-[3px] bg-border-interactive" />
-                <span className="w-px h-[5px] bg-text-faint" />
-                <span className="w-px h-[3px] bg-border-interactive" />
-                <span className="w-px h-[5px] bg-text-faint" />
-                <span className="w-px h-[3px] bg-border-interactive" />
-                <span className="w-px h-[5px] bg-text-faint" />
-                <span className="w-px h-[3px] bg-border-interactive" />
-              </div>
-              <input
-                type="text"
-                placeholder="Search callsign"
-                defaultValue={searchParams.get("search") ?? ""}
-                onChange={(e) => {
-                  const params = new URLSearchParams(searchParams.toString());
-                  if (e.target.value) {
-                    params.set("search", e.target.value);
-                  } else {
-                    params.delete("search");
-                  }
-                  router.push(`/?${params.toString()}`);
-                }}
-                className="font-heading bg-transparent border-0 border-b border-border-interactive outline-none text-text-primary text-[12px] font-medium tracking-wide w-full placeholder:text-text-muted pb-1 focus:border-accent transition-colors duration-200"
-              />
-            </div>
-
-            <RegionSelector selectedRegion={selectedRegion} compact />
-
-            <div className="flex items-center gap-3 ml-8">
-              <button
-                onClick={toggleTheme}
-                aria-label="Toggle light/dark mode"
-                className="w-11 h-11 rounded-lg flex items-center justify-center cursor-pointer "
-              >
-                <svg width="28" height="33" viewBox="0 0 22 26">
-                  <defs>
-                    <clipPath id="shutter-clip">
-                      <rect x="4" y="4" width="14" height="18" rx="4" />
-                    </clipPath>
-                  </defs>
-                  <rect
-                    x="1.75"
-                    y="1.75"
-                    width="18.5"
-                    height="22.5"
-                    rx="5.5"
-                    fill="var(--color-surface-panel)"
-                    stroke="var(--color-accent-frame)"
-                    strokeWidth="2.5"
-                  />
-                  <g clipPath="url(#shutter-clip)">
-                    <rect
-                      x="4"
-                      y="4"
-                      width="14"
-                      height="18"
-                      fill="var(--color-accent)"
-                      style={{
-                        transform:
-                          mounted && theme === "dark"
-                            ? "scaleY(1)"
-                            : "scaleY(0.06)",
-                        transformOrigin: "11px 4px",
-                        transition: "transform 0.45s ease",
-                      }}
-                    />
-                  </g>
-                </svg>
-              </button>
-
-              {mounted && user ? (
-                <div className="flex items-center gap-3">
-                  <span className="font-heading text-text-hover text-[12px] font-semibold tracking-wide">
-                    {displayName}
-                  </span>
+            ) : (
+              <>
+                <div className="flex gap-5 border-b border-white/10 mb-6">
                   <button
-                    onClick={handleSignOut}
-                    className="font-heading text-text-muted text-[11px] tracking-wide underline hover:text-text-hover transition-colors"
+                    onClick={() => setMode("signup")}
+                    className={`font-heading text-[13px] font-bold tracking-[0.1em] pb-2.5 -mb-px border-b-2 transition-colors ${
+                      mode === "signup"
+                        ? "text-accent border-accent"
+                        : "text-text-faint border-transparent"
+                    }`}
                   >
-                    Sign out
+                    SIGN UP
                   </button>
-                </div>
-              ) : (
-                <div className="relative group">
-                  <span className="pointer-events-none absolute -top-0.5 -left-0.5 w-[5px] h-[5px] border-t-[1.5px] border-l-[1.5px] border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <span className="pointer-events-none absolute -top-0.5 -right-0.5 w-[5px] h-[5px] border-t-[1.5px] border-r-[1.5px] border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <span className="pointer-events-none absolute -bottom-0.5 -left-0.5 w-[5px] h-[5px] border-b-[1.5px] border-l-[1.5px] border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <span className="pointer-events-none absolute -bottom-0.5 -right-0.5 w-[5px] h-[5px] border-b-[1.5px] border-r-[1.5px] border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   <button
-                    onClick={() => setShowAuth(true)}
-                    className="font-heading relative bg-transparent border border-border-interactive text-text-hover text-[12px] font-semibold tracking-wide px-5 py-1.5 rounded-sm cursor-pointer transition-all duration-300 group-hover:text-accent group-hover:border-accent/40"
+                    onClick={() => setMode("signin")}
+                    className={`font-heading text-[13px] font-semibold tracking-[0.1em] pb-2.5 -mb-px border-b-2 transition-colors ${
+                      mode === "signin"
+                        ? "text-accent border-accent"
+                        : "text-text-faint border-transparent"
+                    }`}
                   >
                     SIGN IN
                   </button>
                 </div>
-              )}
-            </div>
+
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4 ">
+                  {mode === "signup" && (
+                    <div>
+                      <label className="font-heading text-text-faint text-[10px] tracking-[0.15em] block mb-1.5">
+                        DISPLAY NAME
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={displayName}
+                        onChange={(e) => setDisplayName(e.target.value)}
+                        className="w-full bg-transparent border-b border-border-interactive text-text-hover text-[14px] pb-1.5 outline-none focus:border-accent transition-colors"
+                      />
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="font-heading text-text-faint text-[10px] tracking-[0.15em] block mb-1.5">
+                      EMAIL
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full bg-transparent border-b border-border-interactive text-text-hover text-[14px] pb-1.5 outline-none focus:border-accent transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="font-heading text-text-faint text-[10px] tracking-[0.15em] block mb-1.5">
+                      PASSWORD
+                    </label>
+                    <input
+                      type="password"
+                      required
+                      minLength={6}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full bg-transparent border-b border-border-interactive text-text-hover text-[14px] pb-1.5 outline-none focus:border-accent transition-colors"
+                    />
+                  </div>
+
+                  {error && <p className="text-danger text-[12px]">{error}</p>}
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="font-heading w-full mt-2 bg-accent text-surface-panel font-bold text-[13px] tracking-[0.1em] py-2.5 rounded-sm disabled:opacity-50 transition-opacity cursor-pointer"
+                  >
+                    {loading ? "..." : mode === "signup" ? "CREATE ACCOUNT" : "SIGN IN"}
+                  </button>
+                </form>
+
+                <p className="font-heading text-center text-text-faint text-[11px] mt-4 ">
+                  <button
+                    onClick={onClose}
+                    className="underline hover:text-text-hover transition-colors"
+                  >
+                    Continue browsing
+                  </button>
+                </p>
+              </>
+            )}
           </div>
         </div>
-      </nav>
-
-      {showAuth && <AuthCard onClose={() => setShowAuth(false)} />}
-    </>
+      </div>
+    </div>
   );
 }

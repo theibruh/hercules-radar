@@ -5,6 +5,8 @@ import Image from "next/image";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import RegionSelector from "@/components/RegionSelector";
 import AuthCard from "@/components/AuthCard";
+import { useUser } from "@/hooks/useUser";
+import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -16,10 +18,23 @@ export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const [mounted, setMounted] = useState<boolean>(false);
   const [showAuth, setShowAuth] = useState(false);
+  const [confirmingSignOut, setConfirmingSignOut] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+  const { user } = useUser();
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  async function handleSignOut() {
+    setSigningOut(true);
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    setSigningOut(false);
+    setConfirmingSignOut(false);
+  }
+
+  const displayName = user?.user_metadata?.display_name ?? "Account";
 
   return (
     <>
@@ -146,18 +161,51 @@ export default function Navbar() {
                   </g>
                 </svg>
               </button>
-              <div className="relative group">
-                <span className="pointer-events-none absolute -top-0.5 -left-0.5 w-[5px] h-[5px] border-t-[1.5px] border-l-[1.5px] border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                <span className="pointer-events-none absolute -top-0.5 -right-0.5 w-[5px] h-[5px] border-t-[1.5px] border-r-[1.5px] border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                <span className="pointer-events-none absolute -bottom-0.5 -left-0.5 w-[5px] h-[5px] border-b-[1.5px] border-l-[1.5px] border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                <span className="pointer-events-none absolute -bottom-0.5 -right-0.5 w-[5px] h-[5px] border-b-[1.5px] border-r-[1.5px] border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                <button
-                  onClick={() => setShowAuth(true)}
-                  className="font-heading relative bg-transparent border border-border-interactive text-text-hover text-[12px] font-semibold tracking-wide px-5 py-1.5 rounded-sm cursor-pointer transition-all duration-300 group-hover:text-accent group-hover:border-accent/40"
-                >
-                  SIGN IN
-                </button>
-              </div>
+
+              {mounted && user ? (
+                <div className="flex items-center gap-3">
+                  <span className="font-heading text-text-hover text-[12px] font-semibold tracking-wide">
+                    {displayName}
+                  </span>
+                  {confirmingSignOut ? (
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={handleSignOut}
+                        disabled={signingOut}
+                        className="font-heading text-danger text-[11px] font-semibold tracking-wide disabled:opacity-50"
+                      >
+                        {signingOut ? "..." : "Confirm?"}
+                      </button>
+                      <button
+                        onClick={() => setConfirmingSignOut(false)}
+                        className="font-heading text-text-muted text-[11px] hover:text-text-hover transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => setConfirmingSignOut(true)}
+                      className="font-heading text-text-muted text-[11px] tracking-wide underline hover:text-text-hover transition-colors"
+                    >
+                      Sign out
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <div className="relative group">
+                  <span className="pointer-events-none absolute -top-0.5 -left-0.5 w-[5px] h-[5px] border-t-[1.5px] border-l-[1.5px] border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <span className="pointer-events-none absolute -top-0.5 -right-0.5 w-[5px] h-[5px] border-t-[1.5px] border-r-[1.5px] border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <span className="pointer-events-none absolute -bottom-0.5 -left-0.5 w-[5px] h-[5px] border-b-[1.5px] border-l-[1.5px] border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <span className="pointer-events-none absolute -bottom-0.5 -right-0.5 w-[5px] h-[5px] border-b-[1.5px] border-r-[1.5px] border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <button
+                    onClick={() => setShowAuth(true)}
+                    className="font-heading relative bg-transparent border border-border-interactive text-text-hover text-[12px] font-semibold tracking-wide px-5 py-1.5 rounded-sm cursor-pointer transition-all duration-300 group-hover:text-accent group-hover:border-accent/40"
+                  >
+                    SIGN IN
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
